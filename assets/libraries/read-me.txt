@@ -1,0 +1,11 @@
+###########################################
+# Please follow below files and folder    #
+# structure to copy license files.        #
+###########################################
+/common.php
+/assets/libraries/defines.php
+/include_config_inc.php
+/include_taxi_webservices.php
+/licence.php
+/xaiocity.com.lic
+###########################################

@@ -1,0 +1,223 @@
+@font-face {
+	font-family: 'icomoon';
+	src:url('../images/icons/icomoon.eot');
+	src:url('../images/icons/icomoond41d.eot?#iefix') format('embedded-opentype'),
+		url('../images/icons/icomoon.svg#icomoon') format('svg'),
+		url('../images/icons/icomoon.woff') format('woff'),
+		url('../images/icons/icomoon.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+::selection {
+	background: #0078c9;
+	color: #fff;
+}
+::-moz-selection {
+	background: #0078c9;
+	color: #fff;
+}
+
+
+/* 
+-------------------------------------
+Demos
+-------------------------------------
+*/
+
+#demos ul {
+	display: block;
+	width: 100%;
+	font-size: 1.4em;
+	line-height: 1.4em;
+}
+#demos li {
+	display: block;
+	width: 50%;
+	font-weight: 400;
+	margin-bottom: 1em;
+	overflow: hidden;
+	padding-top: 1.4em;
+	padding-right: 2em;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	float: left;
+}
+#demos span {
+	display: block;
+	border: 3px solid #ff5e3c;
+	border-radius: 100%;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	width: 5em;
+	height: 5em;
+	background: #ff5e3c;
+	color: #fff;
+	font-size: 0.6em;
+	line-height: 1em;
+	font-weight: 700;
+	padding: 1.8em 0 0 0;
+	text-align: center;
+	margin: -1.4em 1em 0 0;
+	text-transform: uppercase;
+	float: left;
+}
+#demos span:hover {
+	background: #fff !important;
+	color: #5d6365;
+	border: 3px solid #5d6365 !important;
+	cursor: pointer;
+}
+
+
+/* 
+-------------------------------------
+Tooltips
+-------------------------------------
+*/
+
+#demos span.tooltipster-icon {
+       white-space:pre-wrap;
+	cursor: help;
+	margin-left: 4px;
+	background: #0078c9;
+	border: 3px solid #0078c9;
+	width: 2.3em;
+	height: 2.3em;
+	padding: 0.4em 0 0;
+	margin: 2em 0 0 -3em;
+}
+
+/*.tooltipster-default .tooltipster-content {
+	font-family: 'Open Sans', sans-serif;
+}*/
+.tooltipster-default .tooltipster-content img {
+	float: left;
+	margin-right: 10px;
+	border: 2px solid #000;
+}
+.tooltipster-default .tooltipster-content p {
+	margin: 0;
+}
+.tooltipster-default .tooltipster-content a {
+	color: #fff;
+	border-bottom: 1px solid rgba(255,255,255,0.4);
+}
+.tooltipster-default .tooltipster-content a:hover {
+	color: #fff;
+	border-bottom: 1px solid rgba(255,255,255,1);
+}
+
+.tooltipster-blue {
+	background: #0078c9;
+	color: #fff;
+	border-radius: 5px;
+}
+.tooltipster-blue .tooltipster-content {
+	font-size: 14px;
+	line-height: 16px;
+	padding: 8px 10px;
+        white-space:pre-wrap;
+}
+
+.tooltipster-white {
+	background: #fff;
+	color: #0078c9;
+	border-radius: 5px; 
+}
+.tooltipster-white .tooltipster-content {
+	font-size: 14px;
+	line-height: 16px;
+	padding: 8px 10px;
+}
+
+.tooltipster-pink {
+	background: url(../images/pattern-navy.png);
+	background-color: #000;
+	color: #fff; 
+	border-radius: 5px;	
+	box-shadow: inset -3px -3px 0 #000;
+        font-weight: 400;
+           white-space:pre-wrap;
+}
+.tooltipster-pink .tooltipster-content {
+    
+	font-weight: 400;
+	font-size: 16px;
+	line-height: 16px;
+	padding: 15px 18px;
+}
+
+
+
+/* 
+-------------------------------------
+Themes
+-------------------------------------
+*/
+
+#themes .themes span {
+	display: inline-block;
+	padding: 1em;
+	margin-right: 1em;
+	margin-bottom: 1em;
+	opacity: 0.8;
+}
+
+.tooltipster-default-preview {
+	border-radius: 5px; 
+	border: 2px solid #000;
+	background: #4c4c4c;
+	color: #fff;
+	font-size: 14px;
+	line-height: 16px;
+	padding: 8px 10px;
+	font-weight: 400;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+
+.tooltipster-light-preview {
+	border-radius: 5px; 
+	border: 1px solid #cccccc;
+	background: #ededed;
+	color: #666666;
+	font-size: 14px;
+	line-height: 16px;
+	padding: 8px 10px;
+	font-weight: 400;
+}
+
+.tooltipster-punk-preview {
+	border-radius: 5px;
+	border-bottom: 3px solid #f71169;
+	background: #2a2a2a;
+	color: #fff;
+	font-size: 14px;
+	line-height: 16px;
+	padding: 8px 10px;
+	font-weight: 400;
+}
+
+.tooltipster-noir-preview {
+	border-radius: 0px;
+	border: 3px solid #2c2c2c;
+	background: #fff;
+	color: #2c2c2c;
+	font-size: 14px;
+	line-height: 16px;
+	padding: 8px 10px;
+	font-weight: 400;
+}
+
+.tooltipster-shadow-preview {
+	border-radius: 5px;
+	background: #fff;
+	box-shadow: 0px 0px 14px rgba(0,0,0,0.3);
+	color: #2c2c2c;
+	font-size: 14px;
+	line-height: 16px;
+	padding: 8px 10px;
+	font-weight: 400;
+}
+

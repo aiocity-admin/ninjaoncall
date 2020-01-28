@@ -1,0 +1,158 @@
+[31-Mar-2017 08:33:50 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 186
+[31-Mar-2017 08:35:01 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 186
+[31-Mar-2017 08:35:03 America/Chicago] PHP Catchable fatal error:  Object of class Facebook\FacebookRedirectLoginHelper could not be converted to string in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 19
+[31-Mar-2017 08:35:06 America/Chicago] PHP Catchable fatal error:  Object of class Facebook\FacebookRedirectLoginHelper could not be converted to string in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 19
+[31-Mar-2017 08:35:08 America/Chicago] PHP Catchable fatal error:  Object of class Facebook\FacebookRedirectLoginHelper could not be converted to string in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 19
+[31-Mar-2017 08:35:09 America/Chicago] PHP Catchable fatal error:  Object of class Facebook\FacebookRedirectLoginHelper could not be converted to string in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 19
+[31-Mar-2017 08:35:29 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 186
+[31-Mar-2017 08:39:54 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 186
+[31-Mar-2017 08:40:00 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 186
+[31-Mar-2017 08:41:11 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 186
+[31-Mar-2017 08:44:06 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 188
+[31-Mar-2017 08:44:18 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 188
+[31-Mar-2017 08:46:11 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 188
+[31-Mar-2017 08:46:52 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 187
+[31-Mar-2017 08:46:56 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 187
+[31-Mar-2017 08:47:34 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 187
+[31-Mar-2017 08:47:35 America/Chicago] PHP Fatal error:  Class 'Facebook\FacebookRedirectLoginHelper' not found in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 19
+[31-Mar-2017 08:47:36 America/Chicago] PHP Fatal error:  Class 'Facebook\FacebookRedirectLoginHelper' not found in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 19
+[31-Mar-2017 08:47:42 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 187
+[31-Mar-2017 08:48:01 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 187
+[31-Mar-2017 08:48:18 America/Chicago] PHP Parse error:  syntax error, unexpected end of file in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 285
+[31-Mar-2017 08:48:24 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 187
+[31-Mar-2017 08:50:30 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 187
+[31-Mar-2017 08:50:36 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 187
+[31-Mar-2017 08:50:39 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 187
+[31-Mar-2017 08:50:47 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 187
+[31-Mar-2017 08:51:16 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 187
+[31-Mar-2017 08:51:23 America/Chicago] PHP Fatal error:  Cannot use object of type stdClass as array in /home3/eswweb/public_html/projects/leetglobal/dip/Facebook/FacebookRedirectLoginHelper.php on line 187
+[31-Mar-2017 09:21:32 America/Chicago] PHP Parse error:  syntax error, unexpected end of file in /home3/eswweb/public_html/projects/leetglobal/dip/fbconnect.php on line 191
+[31-Mar-2017 09:38:15 America/Chicago] PHP Notice:  Undefined variable: obj in /home3/eswweb/public_html/projects/leetglobal/dip/fbconnect.php on line 41
+[31-Mar-2017 09:38:15 America/Chicago] PHP Fatal error:  Call to a member function MySQLSelect() on a non-object in /home3/eswweb/public_html/projects/leetglobal/dip/fbconnect.php on line 41
+[31-Mar-2017 09:50:50 America/Chicago] PHP Parse error:  syntax error, unexpected '}', expecting catch (T_CATCH) in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 65
+[31-Mar-2017 09:51:14 America/Chicago] PHP Parse error:  syntax error, unexpected '}', expecting catch (T_CATCH) in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 65
+[31-Mar-2017 09:51:17 America/Chicago] PHP Parse error:  syntax error, unexpected '}', expecting catch (T_CATCH) in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 65
+[31-Mar-2017 10:04:10 America/Chicago] PHP Parse error:  syntax error, unexpected '}', expecting catch (T_CATCH) in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 58
+[31-Mar-2017 10:05:27 America/Chicago] PHP Parse error:  syntax error, unexpected '}', expecting catch (T_CATCH) in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 72
+[31-Mar-2017 23:31:21 America/Chicago] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 61
+[01-Apr-2017 00:11:13 America/Chicago] PHP Parse error:  syntax error, unexpected '(', expecting identifier (T_STRING) in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 79
+[01-Apr-2017 01:20:49 America/Chicago] PHP Parse error:  syntax error, unexpected end of file in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 45
+[01-Apr-2017 01:20:49 America/Chicago] PHP Parse error:  syntax error, unexpected end of file in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 86
+[01-Apr-2017 01:20:49 America/Chicago] PHP Parse error:  syntax error, unexpected end of file in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 86
+[01-Apr-2017 01:20:49 America/Chicago] PHP Parse error:  syntax error, unexpected end of file in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 86
+[01-Apr-2017 01:20:49 America/Chicago] PHP Parse error:  syntax error, unexpected end of file in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 86
+[01-Apr-2017 01:20:49 America/Chicago] PHP Parse error:  syntax error, unexpected end of file in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 86
+[01-Apr-2017 01:20:49 America/Chicago] PHP Parse error:  syntax error, unexpected end of file in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 86
+[01-Apr-2017 04:14:22 America/Chicago] PHP Parse error:  syntax error, unexpected 'catch' (T_CATCH) in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 241
+[01-Apr-2017 04:17:13 America/Chicago] PHP Parse error:  syntax error, unexpected 'catch' (T_CATCH) in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 241
+[01-Apr-2017 04:17:17 America/Chicago] PHP Parse error:  syntax error, unexpected '}' in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 289
+[01-Apr-2017 04:17:36 America/Chicago] PHP Parse error:  syntax error, unexpected '}' in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 290
+[01-Apr-2017 04:17:39 America/Chicago] PHP Parse error:  syntax error, unexpected '}' in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 290
+[01-Apr-2017 04:40:05 America/Chicago] PHP Parse error:  syntax error, unexpected end of file in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 115
+[01-Apr-2017 04:40:05 America/Chicago] PHP Parse error:  syntax error, unexpected ''sess_iMemberI' (T_ENCAPSED_AND_WHITESPACE), expecting ']' in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 190
+[01-Apr-2017 05:28:10 America/Chicago] PHP Parse error:  syntax error, unexpected end of file in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 88
+[01-Apr-2017 05:28:14 America/Chicago] PHP Parse error:  syntax error, unexpected '/' in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 306
+[01-Apr-2017 05:28:18 America/Chicago] PHP Parse error:  syntax error, unexpected '/' in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 306
+[01-Apr-2017 05:35:06 America/Chicago] PHP Parse error:  syntax error, unexpected end of file, expecting ')' in /home3/eswweb/public_html/projects/leetglobal/dip/fbconfig.php on line 224
+[24-May-2018 04:21:14 America/Chicago] PHP Fatal error:  Uncaught exception 'Facebook\FacebookSDKException' with message 'You must provide or set a default application id.' in /home1/gz89f3do/public_html/fb-login/Facebook/FacebookSession.php:320
+Stack trace:
+#0 /home1/gz89f3do/public_html/fb-login/Facebook/FacebookRedirectLoginHelper.php(75): Facebook\FacebookSession::_getTargetAppId(NULL)
+#1 /home1/gz89f3do/public_html/fb-login/fbconfig.php(44): Facebook\FacebookRedirectLoginHelper->__construct('https://www.nin...')
+#2 {main}
+  thrown in /home1/gz89f3do/public_html/fb-login/Facebook/FacebookSession.php on line 320
+[24-May-2018 04:25:35 America/Chicago] PHP Warning:  Cannot use a scalar value as an array in /home1/gz89f3do/public_html/assets/libraries/class.general.php on line 4138
+[24-May-2018 04:25:35 America/Chicago] PHP Warning:  imagecreatetruecolor(): Invalid image dimensions in /home1/gz89f3do/public_html/assets/libraries/Imagecrop.class.php on line 104
+[24-May-2018 04:25:35 America/Chicago] PHP Warning:  imagejpeg() expects parameter 1 to be resource, boolean given in /home1/gz89f3do/public_html/assets/libraries/Imagecrop.class.php on line 109
+[24-May-2018 04:25:35 America/Chicago] PHP Warning:  imagecreatetruecolor() expects parameter 1 to be long, string given in /home1/gz89f3do/public_html/assets/libraries/Imagecrop.class.php on line 104
+[24-May-2018 04:25:35 America/Chicago] PHP Warning:  imagejpeg() expects parameter 1 to be resource, null given in /home1/gz89f3do/public_html/assets/libraries/Imagecrop.class.php on line 109
+[24-May-2018 04:26:33 America/Chicago] PHP Warning:  Cannot use a scalar value as an array in /home1/gz89f3do/public_html/assets/libraries/class.general.php on line 4138
+[24-May-2018 04:26:33 America/Chicago] PHP Warning:  imagecreatetruecolor(): Invalid image dimensions in /home1/gz89f3do/public_html/assets/libraries/Imagecrop.class.php on line 104
+[24-May-2018 04:26:33 America/Chicago] PHP Warning:  imagejpeg() expects parameter 1 to be resource, boolean given in /home1/gz89f3do/public_html/assets/libraries/Imagecrop.class.php on line 109
+[24-May-2018 04:26:33 America/Chicago] PHP Warning:  imagecreatetruecolor() expects parameter 1 to be long, string given in /home1/gz89f3do/public_html/assets/libraries/Imagecrop.class.php on line 104
+[24-May-2018 04:26:33 America/Chicago] PHP Warning:  imagejpeg() expects parameter 1 to be resource, null given in /home1/gz89f3do/public_html/assets/libraries/Imagecrop.class.php on line 109
+[21-Feb-2019 19:27:35 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[21-Feb-2019 19:27:35 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[21-Feb-2019 19:27:38 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[21-Feb-2019 19:27:38 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[21-Feb-2019 19:27:56 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[21-Feb-2019 19:27:56 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[21-Feb-2019 19:27:56 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[21-Feb-2019 19:27:56 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[21-Feb-2019 19:28:08 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[21-Feb-2019 19:28:08 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[21-Feb-2019 19:28:08 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[21-Feb-2019 19:28:08 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[22-Feb-2019 04:16:53 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[22-Feb-2019 04:16:53 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[27-Feb-2019 05:45:33 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[27-Feb-2019 05:45:33 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[27-Feb-2019 05:45:59 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[27-Feb-2019 05:45:59 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[19-Mar-2019 07:02:30 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[19-Mar-2019 07:02:30 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[20-Mar-2019 20:59:42 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[20-Mar-2019 20:59:42 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[20-Mar-2019 20:59:44 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[20-Mar-2019 20:59:44 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[20-Mar-2019 20:59:46 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[20-Mar-2019 20:59:46 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[23-Mar-2019 05:31:19 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[23-Mar-2019 05:31:19 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[29-Mar-2019 16:24:41 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[29-Mar-2019 16:24:41 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[09-Apr-2019 00:03:08 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[09-Apr-2019 00:03:08 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[10-Apr-2019 00:05:22 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[10-Apr-2019 00:05:22 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[29-Apr-2019 03:51:51 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[29-Apr-2019 03:51:51 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[04-May-2019 01:28:06 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[04-May-2019 01:28:06 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[04-May-2019 01:28:42 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[04-May-2019 01:28:42 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[05-May-2019 23:52:34 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[05-May-2019 23:52:34 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[15-May-2019 13:18:58 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[15-May-2019 13:18:58 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[15-May-2019 13:20:46 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[15-May-2019 13:20:46 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[23-May-2019 06:52:34 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[23-May-2019 06:52:34 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[23-May-2019 10:53:23 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[23-May-2019 10:53:23 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[18-Jun-2019 07:54:28 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[18-Jun-2019 07:54:28 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[18-Jun-2019 07:54:39 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[18-Jun-2019 07:54:39 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[18-Jun-2019 08:56:32 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[18-Jun-2019 08:56:32 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[18-Jun-2019 08:56:40 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[18-Jun-2019 08:56:40 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[29-Jul-2019 21:34:32 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[29-Jul-2019 21:34:32 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[30-Jul-2019 12:43:18 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[30-Jul-2019 12:43:18 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[02-Aug-2019 11:33:29 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[02-Aug-2019 11:33:29 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[07-Aug-2019 02:18:23 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[07-Aug-2019 02:18:23 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[07-Aug-2019 08:41:10 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[07-Aug-2019 08:41:10 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[07-Aug-2019 08:41:12 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[07-Aug-2019 08:41:12 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[07-Aug-2019 08:41:39 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[07-Aug-2019 08:41:39 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[07-Aug-2019 08:41:41 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[07-Aug-2019 08:41:41 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[11-Aug-2019 23:35:18 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[11-Aug-2019 23:35:18 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[18-Aug-2019 02:42:00 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[18-Aug-2019 02:42:00 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[18-Aug-2019 02:42:01 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[18-Aug-2019 02:42:01 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[27-Aug-2019 18:22:43 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[27-Aug-2019 18:22:43 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[29-Aug-2019 03:47:17 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[29-Aug-2019 03:47:17 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0
+[29-Aug-2019 03:47:21 America/Chicago] PHP Warning:  Module 'imagick' already loaded in Unknown on line 0
+[29-Aug-2019 03:47:21 America/Chicago] PHP Warning:  Module 'SourceGuardian' already loaded in Unknown on line 0

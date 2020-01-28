@@ -1,0 +1,2 @@
+[11-Nov-2019 05:25:55 UTC] PHP Fatal error:  The file /home/gz89f3do/public_html/common.php was encoded by the ionCube Encoder for PHP 5.4 and cannot run under PHP 7.1 or later.
+ Please ask the provider of the script to provide a version encoded with the ionCube Encoder for PHP 7.1. in Unknown on line 0

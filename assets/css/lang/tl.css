@@ -1,0 +1,68 @@
+.home-hero-page-right-text span{margin: 22px 0 0 35px;}
+.sign-in-driver p{ min-height: 108px;}
+.sign-in-rider p{min-height: 107px;}
+.profile-Password span .profile-Password-save{width: 133px;}
+.get-there-inner span{width: 219px;}
+.logo{width: 55%;}
+.login-form-left b .submit-but{width:auto; padding:5px 15px;}
+.trips-table-inner table td{padding: 13px 3px;}
+
+
+@media screen and (min-width:1px) and (max-width:414px) {
+/*.header-page::before{bottom: 39px !important;}*/
+.header-page-driver-glt::before { bottom: 0px !important;}
+.header-page-add-glt::before{bottom: 40px !important;}
+}
+
+@media screen and (min-width:1px) and (max-width:350px) {
+.header-page::before { bottom: -10px !important;}
+.header-page-add-glt::before{bottom: 40px;}
+.header-page-d1::before { bottom: 40px;}
+.header-page-driver-glt::before{bottom: 40px !important;}
+}
+
+@media screen and (min-width:568px) and (max-width:666px) {
+.logo { margin-left: 5%; width: 69%; !important}
+.home-hero-page-right-text span{margin: 8px 0 0 35px;}
+.sign-in-rider p { min-height: 42px;}
+}
+
+
+@media screen and (min-width:1px) and (max-width:767px) {
+.header-page-d1{font-size: 42px;}
+.header-page::before{bottom: 0px;}
+.header-page-driver-glt::before{bottom: 40px !important;}
+.sign-in-driver p{min-height:0px;}
+.home-hero-page-right-text { width: 340px;}
+.sign-in-driver { width: 100%;}
+.sign-in-rider {  width: 100%; float: left;}
+}
+
+
+
+@media screen and (min-width:768px) and (max-width:1023px) {
+.get-there-inner h2{font-size: 30px; width: 50%;}
+.get-there-inner h2 b{font-size: 20px;}
+.sign-in-driver{width: 50%;}
+.sign-in-rider{float: none; width: 53%;}
+.sign-in-rider p { min-height: 78px;}
+.home-hero-page-right-text{width: 323px !important;}
+.sign-in-driver p{ min-height: 108px !important; width:90%;}
+.footer-box1 .lang b{font-size:14px;}
+.logo { margin-left: 5% !important; width: 70% !important;}
+.logo .top-logo-link{margin: 0 0 0 1%;}
+.get-there-inner span { width: 240px;}
+.top-link span a{margin: 0 5px;}
+/*.logo .top-logo-link a{padding: 0 4px;}*/
+}
+@media screen and (min-width:1024px) and (max-width:1099px) {
+.footer-box1 .lang b{font-size:14px;}
+.logo { margin-left: 5%; width: 69%; !important}
+}
+
+
+
+
+
+
+

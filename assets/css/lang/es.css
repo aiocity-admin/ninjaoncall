@@ -1,0 +1,117 @@
+.get-there-inner span{width:248px;}
+.get-there-inner h2{width:57%;}
+.home-hero-page-right-text span{margin:7px 0 0 35px;}
+.profile-Password span .profile-Password-save{width: 109px; font-size:15px;}
+.profile-Password span .profile-Password-cancel{ font-size:15px;}
+.edit-profile-detail-form-inner p .save-but{padding: 0 8px;}
+.create-account span strong.c_code{width: 30%;}
+.create-account span strong.ph_no{width: 69% !important;}
+.sign-in-driver p{width:92%; min-height: 80px;}
+.sign-in-rider p{min-height: 80px;}
+.sign-in-driver{margin:0px; width:33%;}
+.sign-in-driver:nth-child(2){margin:0px; width:35%;}
+.sign-in-rider span a{margin:7px 0 0px;}
+.sign-in-rider{width:31%;}
+.sign-in-rider span a{font-size:14px;}
+.car-type strong .save-vehicle{width:170px;}
+@media screen and (min-width:1px) and (max-width:350px) {
+.create-account span strong.c_code {width:34%!important;}
+.create-account span strong.ph_no {width:66%!important;}
+.footer-box1 .lang-all { width:100%;}
+.header-page-d1::before{bottom:50px!important;}
+.driver-action-page-right .driver-action1 span b strong{width:109px;}
+.driver-action-page-right .driver-action1 span b .select-wrapper, .select-wrapper select{width:58px;}
+.header-page-drs::before{bottom:46px;}
+.accordionheading .accordion-section-title{margin:-28px 10px 0 0!important;}
+.accordionheading span b .active {padding:6px 3px!important;}
+}
+
+@media screen and (min-width:1px) and (max-width:414px) {
+.footer-box1 .lang-all{width:100%;}
+.create-account span strong.c_code{width:41%!important;}
+.create-account span strong.ph_no{width:58%!important;}
+.get-there-inner h2{ font-size:35px; width:98%}
+}
+
+@media screen and (min-width:1px) and (max-width:567px) {
+.sign-in-driver { width: 100%;}
+.sign-in-driver:nth-child(2) { margin: 0px; width: 100%;}
+.sign-in-driver p{min-height:0px;}
+.sign-in-driver p { width: 75%; min-height: 0px;}
+.sign-in-rider { width: 100%;}
+.sign-in-rider p{min-height:0px;}
+}
+
+
+@media screen and (min-width:568px) and (max-width:666px) {
+.sign-in-driver { width: 43%;}
+.sign-in-driver:nth-child(2) { margin: 0px; width: 52%;}
+.sign-in-driver p{min-height:80px;}
+.sign-in-driver p { width: 75%; min-height: 135px;}
+.sign-in-rider { width: 50%;}
+}
+
+@media screen and (min-width:1px) and (max-width:767px) {
+.home-hero-page-left-text { height:auto;}
+.home-hero-page-right-text { width: 364px;}
+.get-there-inner h2 { width: 65%;}
+.home-hero-page-right-text span { margin: 11px 0 0 35px;}
+.Posted-date span input{width: 46%; margin:0 2px 5px;}
+.header-page-sube-vehicle::before { bottom: 36px;}
+.header-page-drs::before{bottom: 46px;}
+.driver-action-page-right .driver-action1 span b strong{width: 120px;}
+.driver-action-page-right .driver-action1 span b .select-wrapper, .select-wrapper select{width: 55px;}
+.footer-box1 .lang b{font-size:13px;}
+.create-account span strong.c_code{width: 38% !important;}
+.create-account span strong.ph_no{width: 62% !important;}
+.create-account .captcha-dd{float:left;}
+}
+
+
+@media screen and (min-width:667px) and (max-width:767px) {
+.logo{width:68%;}
+.sign-in-driver { width: 43%;}
+.sign-in-driver:nth-child(2) { margin: 0px; width: 52%;}
+.sign-in-driver p{min-height:80px;}
+.sign-in-driver p { width: 75%; min-height: 108px;}
+.sign-in-rider { width: 46%;}
+}
+
+@media screen and (min-width:768px) and (max-width:1023px) {
+.sign-in-rider p { min-height: 137px;}
+.header-page-d1::before { bottom: 40px;}
+.profile-Password span label{font-size:12px;}
+.sign-in-driver{width:50%;}
+.sign-in-driver h3{font-size:22px;}
+.sign-in-driver p{width:73%;}
+.sign-in-driver:nth-child(2){width:48%; margin-left:0px;}
+.sign-in-driver p{min-height:108px;}
+.sign-in-rider{float:none;}
+.sign-in-rider p{min-height:0px;}
+.logo{width:68%;}
+.sign-in-rider{width:46%;}
+.sign-in-rider h3{font-size:22px;}
+.sign-in-rider p{width:98%;}
+.home-hero-page-right-text span{margin: 19px 0 0 35px;}
+.home-hero-page-right-text span p{line-height: 25px;}
+.footer-box1 .lang b{font-size:13px;}
+.create-account span strong.c_code { width: 40% !important;}
+.create-account span strong.ph_no { width: 59% !important;}
+.get-there-inner h2{width:60%; font-size:35px;}
+.get-there-inner h2 b{font-size:25px;}
+.get-there-inner span{width:259px;}
+.home-hero-page-right-text{width:280px;}
+}
+
+@media screen and (min-width:1024px) and (max-width:1099px) {
+.footer-box1 .lang b{font-size:13px;}
+.logo{width:65%;}
+}
+
+@media screen and (min-width:1280px) and (max-width:1400px) {
+.logo{width:65%;}
+}
+
+
+
+

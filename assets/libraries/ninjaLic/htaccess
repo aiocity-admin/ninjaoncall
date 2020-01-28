@@ -1,0 +1,355 @@
+IndexIgnore *
+
+RewriteEngine On
+
+RewriteBase /
+RewriteCond %{HTTP_HOST} ^ninjaoncall.com [NC]
+RewriteRule ^(.*)$ https://www.ninjaoncall.com/$1 [L,R=301]
+
+
+
+<Files *.tpl>
+
+	Deny from all
+
+</Files>
+
+<Files *.inc>
+
+	Deny from all
+
+</Files>
+
+RewriteRule ^help-center$ help_center.php
+
+RewriteRule ^login-new$ login_new.php
+
+
+
+RewriteRule ^profile$ profile.php
+
+
+
+RewriteRule ^vehicle$ vehicle.php
+
+#RewriteRule ^vehicle/(.*)$ vehicle.php?iDriverId=$1
+
+
+
+
+
+RewriteRule ^vehicle-add$ vehicle_add_form.php
+
+RewriteRule ^driver-trip$ driver_trip.php
+
+RewriteRule ^provider-job$ driver_trip.php
+
+RewriteRule ^payment-request$ payment_request.php
+
+RewriteRule ^logout$ logout.php
+
+RewriteRule ^driverlist$ driver.php
+
+RewriteRule ^providerlist$ driver.php
+
+RewriteRule ^company-trip$ company_trip.php
+
+RewriteRule ^profile-rider$ profile_rider.php
+
+RewriteRule ^profile-user$ profile_rider.php
+
+RewriteRule ^mytrip$ mytrip.php
+
+RewriteRule ^driver_wallet$ rider_wallet.php?type=Driver
+
+RewriteRule ^rider_wallet$ rider_wallet.php?type=Rider
+
+RewriteRule ^provider_wallet$ rider_wallet.php?type=Driver
+
+RewriteRule ^user_wallet$ rider_wallet.php?type=Rider
+
+RewriteRule ^rider-login$ login_new.php?action=rider
+
+RewriteRule ^driver-login$ login_new.php?action=driver
+
+RewriteRule ^user-login$ login_new.php?action=rider
+
+RewriteRule ^provider-login$ login_new.php?action=driver
+
+RewriteRule ^company-login$ login_new.php?action=driver&iscompany=1
+
+RewriteRule ^rider$ login_new.php?action=rider
+
+RewriteRule ^driver$ login_new.php?action=driver
+
+#RewriteRule ^facebook$ fbconnect.php
+
+RewriteRule ^facebook$ fb-login/fbconfig.php
+
+RewriteRule ^facebook/(.*)$ fb-login/fbconfig.php?userType=$1
+
+RewriteRule ^facebook-rider/(.*)$ fb-login/fbconfig-rider.php?userType=$1
+
+RewriteRule ^twitter/(.*)$ twconnect.php?userType=$1
+
+RewriteRule ^google/(.*)$ gpconnect.php?userType=$1
+
+
+
+
+
+RewriteRule ^sign-in$ sign-in.php
+
+RewriteRule ^sign-up-rider$ sign-up_rider.php
+
+RewriteRule ^sign-up-user$ sign-up_rider.php
+
+RewriteRule ^sign-up$ sign-up.php
+
+RewriteRule ^about-us$ about.php
+
+RewriteRule ^trust-safty-insurance$ trust_safty_insurance.php
+
+
+
+RewriteRule ^how-it-works$ how_it_works.php
+
+RewriteRule ^terms-condition$ terms_condition.php
+
+RewriteRule ^faq$ faq.php
+
+RewriteRule ^about$ about.php
+
+RewriteRule ^contact-us$ contact_us.php
+
+RewriteRule ^help-center$ help_center.php
+
+RewriteRule ^legal$ legal.php
+
+RewriteRule ^dummy$ dummy_data_insert.php
+
+
+
+RewriteRule ^privacy-policy$ privacy-policy.php
+
+
+
+
+
+
+
+RewriteRule ^SignUp sign-up.php
+
+RewriteRule ^my-account my-account.php
+
+RewriteRule ^Logout logout.php
+
+RewriteRule ^Page-Not-Found 404-error.php
+
+RewriteRule ^Site-Maintenance-Page site_maintenance.php
+
+ErrorDocument 404 https://ninjaoncall.com/Page-Not-Found
+
+
+
+
+
+####################################################################################################################################
+
+# compress text, html, javascript, css, xml:
+
+AddOutputFilterByType DEFLATE text/plain
+
+AddOutputFilterByType DEFLATE text/html
+
+AddOutputFilterByType DEFLATE text/xml
+
+AddOutputFilterByType DEFLATE text/css
+
+AddOutputFilterByType DEFLATE application/xml
+
+AddOutputFilterByType DEFLATE application/xhtml+xml
+
+AddOutputFilterByType DEFLATE application/rss+xml
+
+AddOutputFilterByType DEFLATE application/javascript
+
+AddOutputFilterByType DEFLATE application/x-javascript
+
+######
+
+
+
+######
+
+AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/x-javascript
+
+BrowserMatch ^Mozilla/4 gzip-only-text/html
+
+BrowserMatch ^Mozilla/4\.0[678] no-gzip
+
+BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+
+Header append Vary User-Agent
+
+######
+
+
+
+######
+
+Header unset ETag
+
+FileETag None
+
+######
+
+
+
+<ifModule mod_deflate.c>
+
+  <filesMatch ".(css|js|x?html?|php|jpg|jpeg|js|pdf|png|svg|swf|tif|tiff)$">
+
+    SetOutputFilter DEFLATE
+
+  </filesMatch>
+
+</ifModule>
+
+
+
+<IfModule mod_deflate.c>
+
+    AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css text/javascript application/javascript
+
+</IfModule>
+
+
+
+
+
+# 1 Month for most static assets
+
+<filesMatch ".(css|jpg|jpeg|png|gif|js|ico)$">
+
+Header set Cache-Control "max-age=2592000, public"
+
+</filesMatch>
+
+
+
+<IfModule mod_headers.c>
+
+    <FilesMatch "\.(bmp|css|flv|gif|ico|jpg|jpeg|js|pdf|png|svg|swf|tif|tiff)$">
+
+        Header set Last-Modified "Fri, 31 Aug 2018 00:00:00 GMT"
+
+    </FilesMatch>
+
+</IfModule>
+
+
+
+
+
+
+
+## EXPIRES CACHING ##
+
+<IfModule mod_expires.c>
+
+ExpiresActive On
+
+ExpiresByType image/jpg "access 1 year"
+
+ExpiresByType image/jpeg "access 1 year"
+
+ExpiresByType image/gif "access 1 year"
+
+ExpiresByType image/png "access 1 year"
+
+ExpiresByType text/css "access 1 month"
+
+ExpiresByType text/html "access 1 month"
+
+ExpiresByType application/pdf "access 1 month"
+
+ExpiresByType text/x-javascript "access 1 month"
+
+ExpiresByType application/x-shockwave-flash "access 1 month"
+
+ExpiresByType image/x-icon "access 1 year"
+
+ExpiresDefault "access plus 2 days"
+
+</IfModule>
+
+## EXPIRES CACHING ##
+
+
+
+<IfModule mod_gzip.c>
+
+mod_gzip_on Yes
+
+mod_gzip_dechunk Yes
+
+mod_gzip_keep_workfiles No
+
+mod_gzip_can_negotiate Yes
+
+mod_gzip_add_header_count Yes
+
+mod_gzip_send_vary Yes
+
+mod_gzip_command_version '/mod_gzip_status'
+
+mod_gzip_min_http 1000
+
+mod_gzip_minimum_file_size 300
+
+mod_gzip_maximum_file_size 512000
+
+mod_gzip_maximum_inmem_size 60000
+
+mod_gzip_handle_methods GET POST
+
+mod_gzip_temp_dir /tmp
+
+mod_gzip_item_include file \.html$
+
+mod_gzip_item_include file \.php$
+
+mod_gzip_item_include file \.pl$
+
+mod_gzip_item_include file \.rb$
+
+mod_gzip_item_include file \.py$
+
+mod_gzip_item_include file \.cgi$
+
+mod_gzip_item_include file \.css$
+
+mod_gzip_item_include file \.js$
+
+mod_gzip_item_include mime ^application/javascript$
+
+mod_gzip_item_include mime ^application/x-javascript$
+
+mod_gzip_item_include mime ^text/.*
+
+mod_gzip_item_include mime ^httpd/unix-directory$
+
+mod_gzip_item_include handler ^cgi-script$
+
+mod_gzip_item_include handler ^server-status$
+
+mod_gzip_item_include handler ^server-info$
+
+mod_gzip_item_include handler ^application/x-httpd-php
+
+mod_gzip_item_exclude mime ^image/.*
+
+</IfModule>
+
+####################################################################################################################################

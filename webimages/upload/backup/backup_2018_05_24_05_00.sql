@@ -1,0 +1,15846 @@
+DROP TABLE admin_alerts;
+
+CREATE TABLE `admin_alerts` (
+  `iAlertId` int(10) NOT NULL AUTO_INCREMENT,
+  `tAlertText` text NOT NULL,
+  `iCompanyId` int(10) NOT NULL,
+  `iDriverId` int(10) NOT NULL,
+  `dDate` datetime NOT NULL,
+  `eStatus` enum('Read','Unread') NOT NULL,
+  PRIMARY KEY (`iAlertId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
+
+DROP TABLE admin_groups;
+
+CREATE TABLE `admin_groups` (
+  `iGroupId` int(11) NOT NULL AUTO_INCREMENT,
+  `vGroup` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `eStatus` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`iGroupId`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+INSERT INTO admin_groups VALUES("","","");
+INSERT INTO admin_groups VALUES("","","");
+INSERT INTO admin_groups VALUES("","","");
+
+
+
+DROP TABLE administrators;
+
+CREATE TABLE `administrators` (
+  `iAdminId` int(11) NOT NULL AUTO_INCREMENT,
+  `iGroupId` int(11) NOT NULL DEFAULT '1',
+  `vFirstName` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vLastName` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vEmail` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vContactNo` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `vPassword` varchar(255) NOT NULL,
+  `eStatus` enum('Active','Inactive','Deleted') CHARACTER SET utf8 NOT NULL DEFAULT 'Active',
+  `eDefault` enum('Yes','No') NOT NULL DEFAULT 'No',
+  PRIMARY KEY (`iAdminId`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+INSERT INTO administrators VALUES("","","","","","","","","");
+INSERT INTO administrators VALUES("","","","","","","","","");
+INSERT INTO administrators VALUES("","","","","","","","","");
+
+
+
+DROP TABLE airport_location_master;
+
+CREATE TABLE `airport_location_master` (
+  `iAirportLocationId` int(10) NOT NULL AUTO_INCREMENT,
+  `iCountryId` int(11) NOT NULL,
+  `vLocationName` varchar(500) NOT NULL,
+  `tPassengerLatitude` text NOT NULL,
+  `tPassengerLongitude` text NOT NULL,
+  `tDriverLatitude` text NOT NULL,
+  `tDriverLongitude` text NOT NULL,
+  `eStatus` enum('Active','Inactive') NOT NULL,
+  PRIMARY KEY (`iAirportLocationId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+DROP TABLE all_database_details;
+
+CREATE TABLE `all_database_details` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `host_name` varchar(50) NOT NULL,
+  `db_name` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  `db_user` varchar(50) NOT NULL,
+  `mls_name` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE backup_database;
+
+CREATE TABLE `backup_database` (
+  `iBackupId` int(11) NOT NULL AUTO_INCREMENT,
+  `vFile` varchar(255) NOT NULL,
+  `eType` enum('Manual','Auto') NOT NULL DEFAULT 'Auto',
+  `dDate` datetime NOT NULL,
+  PRIMARY KEY (`iBackupId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE banners;
+
+CREATE TABLE `banners` (
+  `iFaqcategoryId` int(5) NOT NULL AUTO_INCREMENT,
+  `eStatus` enum('Active','Inactive') DEFAULT 'Active',
+  `iDisplayOrder` int(5) NOT NULL,
+  `vTitle` varchar(100) DEFAULT NULL,
+  `vImage` varchar(100) NOT NULL,
+  `vCode` varchar(100) NOT NULL,
+  `iUniqueId` int(11) NOT NULL,
+  PRIMARY KEY (`iFaqcategoryId`)
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+
+INSERT INTO banners VALUES("","","","","","","");
+INSERT INTO banners VALUES("","","","","","","");
+INSERT INTO banners VALUES("","","","","","","");
+INSERT INTO banners VALUES("","","","","","","");
+INSERT INTO banners VALUES("","","","","","","");
+INSERT INTO banners VALUES("","","","","","","");
+INSERT INTO banners VALUES("","","","","","","");
+INSERT INTO banners VALUES("","","","","","","");
+
+
+
+DROP TABLE cab_booking;
+
+CREATE TABLE `cab_booking` (
+  `iCabBookingId` int(11) NOT NULL AUTO_INCREMENT,
+  `vBookingNo` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `iCompanyId` int(11) NOT NULL DEFAULT '1',
+  `iUserId` int(11) NOT NULL COMMENT 'link with register_uesr table',
+  `iDriverId` int(11) NOT NULL,
+  `vSourceLatitude` varchar(30) CHARACTER SET utf8 NOT NULL COMMENT 'source lat',
+  `vSourceLongitude` varchar(30) CHARACTER SET utf8 NOT NULL COMMENT 'source long',
+  `vDestLatitude` varchar(30) CHARACTER SET utf8 NOT NULL COMMENT 'destination lat',
+  `vDestLongitude` varchar(30) CHARACTER SET utf8 NOT NULL COMMENT 'destination long',
+  `vDistance` int(11) NOT NULL COMMENT 'in KMs',
+  `vDuration` int(11) NOT NULL COMMENT 'in Minutes',
+  `dBooking_date` datetime NOT NULL COMMENT 'date and time where user want to ride',
+  `vSourceAddresss` text CHARACTER SET utf8 NOT NULL COMMENT 'source address',
+  `tDestAddress` text CHARACTER SET utf8 NOT NULL,
+  `dAddredDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'ride later created date',
+  `iTripId` int(11) NOT NULL COMMENT 'If status is ''Assign''  trip table have entry of this ride',
+  `eStatus` enum('Pending','Assign','Accepted','Declined','Failed','Cancel','Completed') CHARACTER SET utf8 NOT NULL DEFAULT 'Pending' COMMENT 'Pending - default; cancel- if user want to cancel; Assign - driver select ride; Failed-no one availble/accept',
+  `ePayType` enum('Cash','Card','Paypal') NOT NULL COMMENT 'payment type',
+  `iVehicleTypeId` int(11) NOT NULL COMMENT 'vehicle type id - carx,y,z',
+  `iRentalPackageId` int(11) NOT NULL COMMENT 'linked to rental_package table',
+  `fPickUpPrice` float NOT NULL DEFAULT '1',
+  `fNightPrice` float NOT NULL DEFAULT '1',
+  `eCancelBy` enum('Driver','Rider','Admin') NOT NULL,
+  `iCancelByUserId` int(11) NOT NULL,
+  `dCancelDate` datetime NOT NULL,
+  `vFailReason` varchar(200) CHARACTER SET utf8 NOT NULL,
+  `vCancelReason` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `eType` enum('Ride','Deliver','UberX') NOT NULL,
+  `iPackageTypeId` int(11) NOT NULL,
+  `vReceiverName` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `vReceiverMobile` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `tPickUpIns` text CHARACTER SET utf8 NOT NULL,
+  `tDeliveryIns` text CHARACTER SET utf8 NOT NULL,
+  `tPackageDetails` text CHARACTER SET utf8 NOT NULL,
+  `vCouponCode` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `iUserPetId` int(11) NOT NULL DEFAULT '0',
+  `eMessageSend` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `eAutoAssign` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `iCronStage` int(11) NOT NULL,
+  `eAssigned` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `iQty` int(11) NOT NULL DEFAULT '1',
+  `fVisitFee` float NOT NULL DEFAULT '0',
+  `fMaterialFee` float NOT NULL DEFAULT '0',
+  `fMiscFee` float NOT NULL DEFAULT '0',
+  `fDriverDiscount` float NOT NULL DEFAULT '0',
+  `vRideCountry` varchar(10) NOT NULL,
+  `fTollPrice` float NOT NULL DEFAULT '0',
+  `vTollPriceCurrencyCode` varchar(300) NOT NULL,
+  `eTollSkipped` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `eFemaleDriverRequest` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `eHandiCapAccessibility` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `vTimeZone` varchar(255) NOT NULL,
+  `fWalletMinBalance` float NOT NULL DEFAULT '0' COMMENT 'for report purpose only,not in use till now',
+  `fWalletBalance` float NOT NULL DEFAULT '0' COMMENT 'for report purpose only,not in use till now',
+  `eCommisionDeductEnable` enum('Yes','No') NOT NULL DEFAULT 'No' COMMENT 'for report purpose only,not in use till now',
+  `iUserAddressId` int(11) NOT NULL DEFAULT '0',
+  `tUserComment` text CHARACTER SET utf8 NOT NULL,
+  `iTempTripDeliveryLocationId` varchar(500) NOT NULL COMMENT 'multi-delivery',
+  `ePaymentByReceiver` enum('Yes','No') NOT NULL DEFAULT 'No' COMMENT 'multi-delivery',
+  `fTripGenerateFare` float NOT NULL COMMENT 'multi-delivery',
+  `eCancelBySystem` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `eFlatTrip` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `fFlatTripPrice` float NOT NULL DEFAULT '0',
+  `iAirportLocationId` int(11) NOT NULL DEFAULT '0',
+  `eAirportLocation` enum('Yes','No') CHARACTER SET utf8 NOT NULL DEFAULT 'No',
+  PRIMARY KEY (`iCabBookingId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='to send notifucation before 15 min';
+
+
+
+
+DROP TABLE cab_request_now;
+
+CREATE TABLE `cab_request_now` (
+  `iCabRequestId` int(11) NOT NULL AUTO_INCREMENT,
+  `iCabBookingId` int(11) NOT NULL DEFAULT '0',
+  `iUserId` int(11) NOT NULL COMMENT 'link with register_user table',
+  `iDriverId` int(11) NOT NULL DEFAULT '0' COMMENT 'link with register_driver table',
+  `tMsgCode` text NOT NULL,
+  `iTripId` int(11) NOT NULL DEFAULT '0' COMMENT 'If status is ''Assign''  trip table have entry of this ride',
+  `eStatus` enum('Requesting','Cancelled','Complete') CHARACTER SET utf8 NOT NULL DEFAULT 'Requesting' COMMENT 'Requesting - default; Cancelled- if user want to cancel; Complete - driver accepted the ride',
+  `vSourceLatitude` varchar(30) CHARACTER SET utf8 NOT NULL COMMENT 'source lat',
+  `vSourceLongitude` varchar(30) CHARACTER SET utf8 NOT NULL COMMENT 'source long',
+  `tSourceAddress` text CHARACTER SET utf8 NOT NULL COMMENT 'pickup address',
+  `vDestLatitude` varchar(30) CHARACTER SET utf8 NOT NULL COMMENT 'destination lat',
+  `vDestLongitude` varchar(30) CHARACTER SET utf8 NOT NULL COMMENT 'destination long',
+  `tDestAddress` text CHARACTER SET utf8 NOT NULL COMMENT 'destination address',
+  `ePayType` enum('Cash','Card','Paypal') NOT NULL COMMENT 'payment type',
+  `iVehicleTypeId` int(11) NOT NULL COMMENT 'linked to vehicle_type table',
+  `iRentalPackageId` int(11) NOT NULL COMMENT 'link to rental_package table',
+  `fPickUpPrice` float NOT NULL DEFAULT '1' COMMENT 'related to surge price',
+  `fNightPrice` float NOT NULL DEFAULT '1' COMMENT 'related to surge price',
+  `eType` enum('Ride','Deliver','UberX') NOT NULL,
+  `iPackageTypeId` int(11) NOT NULL,
+  `vReceiverName` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `vReceiverMobile` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `tPickUpIns` text CHARACTER SET utf8 NOT NULL,
+  `tDeliveryIns` text CHARACTER SET utf8 NOT NULL,
+  `tPackageDetails` text CHARACTER SET utf8 NOT NULL,
+  `vCouponCode` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `iQty` int(11) NOT NULL DEFAULT '1',
+  `vRideCountry` varchar(10) NOT NULL,
+  `fTollPrice` float NOT NULL DEFAULT '0',
+  `vTollPriceCurrencyCode` varchar(300) NOT NULL,
+  `eTollSkipped` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `eFemaleDriverRequest` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `eHandiCapAccessibility` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `vTimeZone` varchar(255) NOT NULL,
+  `dAddedDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'ride now created date',
+  `eFromCronJob` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `iUserAddressId` int(11) NOT NULL DEFAULT '0',
+  `tUserComment` text CHARACTER SET utf8 NOT NULL,
+  `iTempTripDeliveryLocationId` varchar(500) NOT NULL COMMENT 'multi-delivery',
+  `ePaymentByReceiver` enum('Yes','No') NOT NULL DEFAULT 'No' COMMENT 'multi-delivery',
+  `fDuration` float NOT NULL COMMENT 'multi-delivery',
+  `fDistance` float NOT NULL COMMENT 'multi-delivery',
+  `fTripGenerateFare` float NOT NULL COMMENT 'multi-delivery',
+  `eFlatTrip` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `fFlatTripPrice` float NOT NULL DEFAULT '0',
+  `iAirportLocationId` int(11) NOT NULL DEFAULT '0',
+  `eAirportLocation` enum('Yes','No') CHARACTER SET utf8 NOT NULL DEFAULT 'No',
+  PRIMARY KEY (`iCabRequestId`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 COMMENT='to send ride now request';
+
+INSERT INTO cab_request_now VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO cab_request_now VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO cab_request_now VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+
+
+
+DROP TABLE cancel_reason;
+
+CREATE TABLE `cancel_reason` (
+  `iCancelReasonId` int(100) NOT NULL AUTO_INCREMENT,
+  `iSortId` int(100) NOT NULL,
+  `eStatus` enum('Active','Inactive') CHARACTER SET latin1 NOT NULL DEFAULT 'Active',
+  `eAllowedCharge` enum('Yes','No') CHARACTER SET latin1 NOT NULL DEFAULT 'No' COMMENT 'allow passenger to charge extra money as per vehicle_type',
+  `vTitle_EN` varchar(500) NOT NULL,
+  `vTitle_TL` varchar(500) NOT NULL,
+  UNIQUE KEY `iCancelReasonId` (`iCancelReasonId`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+INSERT INTO cancel_reason VALUES("","","","","","");
+INSERT INTO cancel_reason VALUES("","","","","","");
+INSERT INTO cancel_reason VALUES("","","","","","");
+INSERT INTO cancel_reason VALUES("","","","","","");
+
+
+
+DROP TABLE city;
+
+CREATE TABLE `city` (
+  `iCityId` int(5) NOT NULL AUTO_INCREMENT,
+  `vCity` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `iCountryId` int(7) NOT NULL,
+  `iStateId` int(5) NOT NULL,
+  `eStatus` enum('Active','Inactive','Deleted') CHARACTER SET utf8 NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`iCityId`)
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=latin1;
+
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+INSERT INTO city VALUES("","","","","");
+
+
+
+DROP TABLE company;
+
+CREATE TABLE `company` (
+  `iCompanyId` int(11) NOT NULL AUTO_INCREMENT,
+  `vName` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `vLastName` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vLoginId` varchar(100) NOT NULL,
+  `vPassword` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `vImage` varchar(500) NOT NULL,
+  `vCompany` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vCaddress` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vCadress2` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vCity` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vState` varchar(255) NOT NULL,
+  `vZip` varchar(255) NOT NULL,
+  `vInviteCode` varchar(255) NOT NULL,
+  `dBirthDate` date NOT NULL,
+  `vFathersName` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vBackCheck` varchar(255) NOT NULL,
+  `vDriverImg` varchar(10000) DEFAULT NULL,
+  `vEmail` varchar(1000) CHARACTER SET utf8 DEFAULT NULL,
+  `vPhone` varchar(11) CHARACTER SET utf8 DEFAULT NULL,
+  `eStatus` enum('Active','Inactive','Deleted') CHARACTER SET utf8 NOT NULL DEFAULT 'Active' COMMENT 'Deleted will comes when admin want to delete company',
+  `vLang` varchar(10) NOT NULL,
+  `vVat` varchar(10) NOT NULL,
+  `vCountry` varchar(200) NOT NULL,
+  `vCode` varchar(10) NOT NULL,
+  `eAccess` enum('Deaf','None') NOT NULL DEFAULT 'None',
+  `vNoc` varchar(200) NOT NULL,
+  `vCerti` varchar(200) NOT NULL,
+  `tRegistrationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `vPasswordToken` varchar(255) NOT NULL,
+  `vPassword_token` varchar(255) NOT NULL,
+  PRIMARY KEY (`iCompanyId`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+INSERT INTO company VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+
+
+
+DROP TABLE configurations;
+
+CREATE TABLE `configurations` (
+  `iSettingId` int(11) NOT NULL AUTO_INCREMENT,
+  `tDescription` text NOT NULL,
+  `vName` varchar(255) NOT NULL,
+  `vValue` text CHARACTER SET utf8 NOT NULL,
+  `vOrder` int(11) NOT NULL,
+  `eType` enum('General','Email','Apperance','Prices','Paypal','Meta','SMS','Payment','Social Media','App Settings','Installation Settings') NOT NULL DEFAULT 'General',
+  `eStatus` enum('Active','Inactive') DEFAULT NULL,
+  `tHelp` text NOT NULL,
+  `eInputType` enum('Text','Textarea','Select','Number') NOT NULL DEFAULT 'Text',
+  `tSelectVal` text NOT NULL,
+  PRIMARY KEY (`iSettingId`),
+  UNIQUE KEY `iSettingId` (`iSettingId`)
+) ENGINE=MyISAM AUTO_INCREMENT=177 DEFAULT CHARSET=latin1;
+
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+INSERT INTO configurations VALUES("","","","","","","","","","");
+
+
+
+DROP TABLE country;
+
+CREATE TABLE `country` (
+  `iCountryId` int(11) NOT NULL AUTO_INCREMENT,
+  `vCountry` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT '',
+  `vCountryCode` char(2) CHARACTER SET utf8 NOT NULL DEFAULT '',
+  `vCountryCodeISO_3` char(3) CHARACTER SET utf8 NOT NULL DEFAULT '',
+  `vPhoneCode` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `vTimeZone` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vAlterTimeZone` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `vEmergencycode` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `eStatus` enum('Active','Inactive','Deleted') CHARACTER SET utf8 NOT NULL DEFAULT 'Active',
+  `eUnit` enum('KMs','Miles') CHARACTER SET utf8 NOT NULL DEFAULT 'KMs',
+  `fTax1` float NOT NULL DEFAULT '0',
+  `fTax2` float NOT NULL DEFAULT '0',
+  `eEnableToll` enum('Yes','No') CHARACTER SET utf8 NOT NULL DEFAULT 'No',
+  PRIMARY KEY (`iCountryId`),
+  KEY `IDX_COUNTRIES_NAME` (`vCountry`),
+  KEY `vCountryCode` (`vCountryCode`)
+) ENGINE=MyISAM AUTO_INCREMENT=240 DEFAULT CHARSET=latin1;
+
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+INSERT INTO country VALUES("","","","","","","","","","","","","");
+
+
+
+DROP TABLE country_check;
+
+CREATE TABLE `country_check` (
+  `iCountryId` int(11) NOT NULL AUTO_INCREMENT,
+  `vCountry` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT '',
+  `vCountryCode` char(2) CHARACTER SET utf8 NOT NULL DEFAULT '',
+  `vCountryCodeISO_3` char(3) CHARACTER SET utf8 NOT NULL DEFAULT '',
+  `vPhoneCode` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `vTimeZone` varchar(255) NOT NULL,
+  `vEmergencycode` varchar(100) NOT NULL,
+  `eStatus` enum('Active','Inactive','Deleted') NOT NULL DEFAULT 'Active',
+  `eUnit` enum('KMs','Miles') NOT NULL DEFAULT 'KMs',
+  `fTax1` float NOT NULL DEFAULT '0',
+  `fTax2` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`iCountryId`),
+  KEY `IDX_COUNTRIES_NAME` (`vCountry`),
+  KEY `vCountryCode` (`vCountryCode`)
+) ENGINE=MyISAM AUTO_INCREMENT=247 DEFAULT CHARSET=latin1;
+
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+INSERT INTO country_check VALUES("","","","","","","","","","","");
+
+
+
+DROP TABLE coupon;
+
+CREATE TABLE `coupon` (
+  `iCouponId` int(12) NOT NULL AUTO_INCREMENT,
+  `vCouponCode` varchar(50) CHARACTER SET utf8 NOT NULL DEFAULT '',
+  `tDescription` text CHARACTER SET utf8 NOT NULL,
+  `fDiscount` float(10,2) NOT NULL DEFAULT '0.00',
+  `eType` enum('percentage','cash') NOT NULL DEFAULT 'percentage',
+  `eValidityType` enum('Permanent','Defined') NOT NULL DEFAULT 'Permanent',
+  `dActiveDate` date NOT NULL DEFAULT '0000-00-00',
+  `dExpiryDate` date NOT NULL DEFAULT '0000-00-00',
+  `iUsageLimit` int(8) NOT NULL DEFAULT '0',
+  `iUsed` int(8) NOT NULL DEFAULT '0',
+  `eStatus` enum('Active','Inactive','Deleted') NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`iCouponId`),
+  KEY `vCouponCode` (`vCouponCode`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE currency;
+
+CREATE TABLE `currency` (
+  `iCurrencyId` int(8) NOT NULL AUTO_INCREMENT,
+  `vName` varchar(10) NOT NULL,
+  `vSymbol` varchar(20) CHARACTER SET utf8 NOT NULL,
+  `iDispOrder` int(11) NOT NULL,
+  `eDefault` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `Ratio` double(10,4) NOT NULL,
+  `fThresholdAmount` float(13,6) NOT NULL COMMENT 'Admin will enter min currency value for driver to be request',
+  `eStatus` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`iCurrencyId`)
+) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
+
+INSERT INTO currency VALUES("","","","","","","","");
+INSERT INTO currency VALUES("","","","","","","","");
+
+
+
+DROP TABLE document_list;
+
+CREATE TABLE `document_list` (
+  `doc_id` int(11) NOT NULL AUTO_INCREMENT,
+  `doc_masterid` int(11) NOT NULL,
+  `doc_usertype` enum('company','driver','car') NOT NULL,
+  `doc_userid` int(11) NOT NULL,
+  `ex_date` date NOT NULL,
+  `doc_file` varchar(200) NOT NULL,
+  `status` enum('Active','Inactive','Deleted') NOT NULL DEFAULT 'Active',
+  `edate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`doc_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+INSERT INTO document_list VALUES("","","","","","","","");
+
+
+
+DROP TABLE document_master;
+
+CREATE TABLE `document_master` (
+  `doc_masterid` int(11) NOT NULL AUTO_INCREMENT,
+  `doc_usertype` enum('company','driver','car') CHARACTER SET latin1 NOT NULL,
+  `doc_name` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `country` varchar(10) CHARACTER SET latin1 NOT NULL,
+  `ex_status` enum('yes','no') CHARACTER SET latin1 NOT NULL,
+  `status` enum('Active','Inactive','Deleted') CHARACTER SET latin1 NOT NULL DEFAULT 'Active',
+  `doc_instime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `doc_name_EN` varchar(50) NOT NULL,
+  `doc_name_TL` varchar(50) NOT NULL,
+  `eType` enum('Ride','Delivery','UberX') NOT NULL DEFAULT 'Ride',
+  PRIMARY KEY (`doc_masterid`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+
+INSERT INTO document_master VALUES("","","","","","","","","","");
+INSERT INTO document_master VALUES("","","","","","","","","","");
+INSERT INTO document_master VALUES("","","","","","","","","","");
+INSERT INTO document_master VALUES("","","","","","","","","","");
+INSERT INTO document_master VALUES("","","","","","","","","","");
+INSERT INTO document_master VALUES("","","","","","","","","","");
+INSERT INTO document_master VALUES("","","","","","","","","","");
+INSERT INTO document_master VALUES("","","","","","","","","","");
+INSERT INTO document_master VALUES("","","","","","","","","","");
+INSERT INTO document_master VALUES("","","","","","","","","","");
+INSERT INTO document_master VALUES("","","","","","","","","","");
+INSERT INTO document_master VALUES("","","","","","","","","","");
+INSERT INTO document_master VALUES("","","","","","","","","","");
+INSERT INTO document_master VALUES("","","","","","","","","","");
+INSERT INTO document_master VALUES("","","","","","","","","","");
+INSERT INTO document_master VALUES("","","","","","","","","","");
+INSERT INTO document_master VALUES("","","","","","","","","","");
+INSERT INTO document_master VALUES("","","","","","","","","","");
+INSERT INTO document_master VALUES("","","","","","","","","","");
+
+
+
+DROP TABLE driver_doc;
+
+CREATE TABLE `driver_doc` (
+  `iDriverId` int(11) NOT NULL,
+  `vLicence` varchar(500) NOT NULL,
+  `vNoc` varchar(500) NOT NULL,
+  `vCerti` varchar(500) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
+
+DROP TABLE driver_location_airport;
+
+CREATE TABLE `driver_location_airport` (
+  `iDriverAirportLocationId` int(11) NOT NULL AUTO_INCREMENT,
+  `iAirportLocationId` int(11) NOT NULL,
+  `iDriverId` int(11) NOT NULL,
+  `tAddedDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`iDriverAirportLocationId`),
+  UNIQUE KEY `iLocatioId` (`iDriverAirportLocationId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE driver_log_report;
+
+CREATE TABLE `driver_log_report` (
+  `iDriverLogId` int(11) NOT NULL AUTO_INCREMENT,
+  `iDriverId` int(11) NOT NULL,
+  `dLoginDateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `dLogoutDateTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `vIP` varchar(255) NOT NULL,
+  PRIMARY KEY (`iDriverLogId`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+INSERT INTO driver_log_report VALUES("","","","","");
+INSERT INTO driver_log_report VALUES("","","","","");
+INSERT INTO driver_log_report VALUES("","","","","");
+INSERT INTO driver_log_report VALUES("","","","","");
+INSERT INTO driver_log_report VALUES("","","","","");
+
+
+
+DROP TABLE driver_manage_timing;
+
+CREATE TABLE `driver_manage_timing` (
+  `iDriverTimingId` int(10) NOT NULL AUTO_INCREMENT,
+  `iDriverId` int(10) NOT NULL,
+  `vDay` varchar(200) NOT NULL,
+  `vAvailableTimes` text NOT NULL,
+  `dAddedDate` datetime NOT NULL,
+  `eStatus` enum('Active','Inactive') CHARACTER SET latin1 NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`iDriverTimingId`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 PACK_KEYS=0;
+
+INSERT INTO driver_manage_timing VALUES("","","","","","");
+
+
+
+DROP TABLE driver_preferences;
+
+CREATE TABLE `driver_preferences` (
+  `iDriverPreferenceId` int(11) NOT NULL AUTO_INCREMENT,
+  `iPreferenceId` int(11) NOT NULL,
+  `iDriverId` int(11) NOT NULL,
+  `eType` enum('Yes','No') NOT NULL DEFAULT 'No',
+  PRIMARY KEY (`iDriverPreferenceId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE driver_request;
+
+CREATE TABLE `driver_request` (
+  `iDriverRequestId` int(20) NOT NULL AUTO_INCREMENT,
+  `iRequestId` int(11) NOT NULL,
+  `iDriverId` int(20) NOT NULL,
+  `iUserId` int(20) NOT NULL,
+  `iTripId` int(11) NOT NULL,
+  `eStatus` enum('Decline','Accept','Timeout','Received','Sent') NOT NULL DEFAULT 'Timeout',
+  `eAcceptAttempted` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `tDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `vMsgCode` text NOT NULL,
+  `vStartLatlong` text NOT NULL,
+  `vEndLatlong` text NOT NULL,
+  `tStartAddress` text NOT NULL,
+  `tEndAddress` text NOT NULL,
+  `dAddedDate` datetime NOT NULL,
+  PRIMARY KEY (`iDriverRequestId`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+INSERT INTO driver_request VALUES("","","","","","","","","","","","","","");
+INSERT INTO driver_request VALUES("","","","","","","","","","","","","","");
+INSERT INTO driver_request VALUES("","","","","","","","","","","","","","");
+
+
+
+DROP TABLE driver_user_messages;
+
+CREATE TABLE `driver_user_messages` (
+  `iMessageId` int(11) NOT NULL AUTO_INCREMENT,
+  `tMessage` text CHARACTER SET utf8 NOT NULL,
+  `tSendertype` text CHARACTER SET utf8 NOT NULL,
+  `iTripId` int(11) NOT NULL COMMENT 'Link with trips',
+  `tDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`iMessageId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE driver_vehicle;
+
+CREATE TABLE `driver_vehicle` (
+  `iDriverVehicleId` int(11) NOT NULL AUTO_INCREMENT COMMENT 'unique id',
+  `iDriverId` int(11) NOT NULL COMMENT 'link with registration_driver_details',
+  `iCompanyId` int(11) NOT NULL,
+  `iMakeId` int(100) NOT NULL,
+  `iModelId` int(100) NOT NULL,
+  `iYear` int(4) NOT NULL,
+  `vLicencePlate` varchar(100) CHARACTER SET utf8 NOT NULL COMMENT 'licence number details',
+  `vColour` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `eStatus` enum('Active','Inactive','Deleted') CHARACTER SET utf8 NOT NULL DEFAULT 'Inactive',
+  `vInsurance` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vPermit` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vRegisteration` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `eCarX` enum('Yes','No') CHARACTER SET utf8 NOT NULL,
+  `eCarGo` enum('Yes','No') CHARACTER SET utf8 NOT NULL,
+  `vCarType` longtext CHARACTER SET utf8 NOT NULL COMMENT 'link with vehicle_type',
+  `vRentalCarType` longtext CHARACTER SET utf8 NOT NULL COMMENT 'link with rental_package',
+  `eHandiCapAccessibility` enum('Yes','No') CHARACTER SET utf8 NOT NULL DEFAULT 'No',
+  `eType` enum('Ride','Delivery','UberX') CHARACTER SET utf8 NOT NULL DEFAULT 'Ride',
+  PRIMARY KEY (`iDriverVehicleId`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+INSERT INTO driver_vehicle VALUES("","","","","","","","","","","","","","","","","","");
+INSERT INTO driver_vehicle VALUES("","","","","","","","","","","","","","","","","","");
+INSERT INTO driver_vehicle VALUES("","","","","","","","","","","","","","","","","","");
+INSERT INTO driver_vehicle VALUES("","","","","","","","","","","","","","","","","","");
+
+
+
+DROP TABLE email_templates;
+
+CREATE TABLE `email_templates` (
+  `iEmailId` int(5) NOT NULL AUTO_INCREMENT,
+  `vEmail_Code` varchar(500) DEFAULT NULL,
+  `eMIME` enum('html','text') DEFAULT NULL,
+  `vSection` enum('Job Seeker','Artist','Franchisee','Employer') DEFAULT NULL,
+  `eStatus` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
+  `vSubject_EN` varchar(500) DEFAULT NULL,
+  `vBody_EN` text,
+  `vSubject_TL` varchar(300) NOT NULL,
+  `vBody_TL` text NOT NULL,
+  PRIMARY KEY (`iEmailId`)
+) ENGINE=MyISAM AUTO_INCREMENT=68 DEFAULT CHARSET=utf8;
+
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+INSERT INTO email_templates VALUES("","","","","","","","","");
+
+
+
+DROP TABLE faq_categories;
+
+CREATE TABLE `faq_categories` (
+  `iFaqcategoryId` int(5) NOT NULL AUTO_INCREMENT,
+  `eStatus` enum('Active','Inactive') DEFAULT 'Active',
+  `iDisplayOrder` int(5) NOT NULL,
+  `vTitle` varchar(100) DEFAULT NULL,
+  `vImage` varchar(100) NOT NULL,
+  `vCode` varchar(100) NOT NULL,
+  `iUniqueId` int(11) NOT NULL,
+  PRIMARY KEY (`iFaqcategoryId`)
+) ENGINE=MyISAM AUTO_INCREMENT=1530 DEFAULT CHARSET=utf8;
+
+INSERT INTO faq_categories VALUES("","","","","","","");
+INSERT INTO faq_categories VALUES("","","","","","","");
+INSERT INTO faq_categories VALUES("","","","","","","");
+INSERT INTO faq_categories VALUES("","","","","","","");
+INSERT INTO faq_categories VALUES("","","","","","","");
+INSERT INTO faq_categories VALUES("","","","","","","");
+
+
+
+DROP TABLE faqs;
+
+CREATE TABLE `faqs` (
+  `iFaqId` int(5) NOT NULL AUTO_INCREMENT,
+  `iFaqcategoryId` int(5) NOT NULL,
+  `eStatus` enum('Active','Inactive') DEFAULT 'Active',
+  `iDisplayOrder` int(5) NOT NULL,
+  `vTitle_EN` text,
+  `tAnswer_EN` text,
+  `eTopic` enum('Front','Admin','RiderApp','DriverApp','General') NOT NULL,
+  `vTitle_TL` text NOT NULL,
+  `tAnswer_TL` varchar(500) NOT NULL,
+  PRIMARY KEY (`iFaqId`)
+) ENGINE=MyISAM AUTO_INCREMENT=70 DEFAULT CHARSET=utf8;
+
+INSERT INTO faqs VALUES("","","","","","","","","");
+INSERT INTO faqs VALUES("","","","","","","","","");
+INSERT INTO faqs VALUES("","","","","","","","","");
+INSERT INTO faqs VALUES("","","","","","","","","");
+INSERT INTO faqs VALUES("","","","","","","","","");
+INSERT INTO faqs VALUES("","","","","","","","","");
+INSERT INTO faqs VALUES("","","","","","","","","");
+
+
+
+DROP TABLE help_detail;
+
+CREATE TABLE `help_detail` (
+  `iHelpDetailId` int(11) NOT NULL AUTO_INCREMENT,
+  `iHelpDetailCategoryId` int(11) NOT NULL,
+  `eStatus` enum('Active','Inactive') DEFAULT 'Active',
+  `iDisplayOrder` int(5) NOT NULL,
+  `vTitle_EN` text,
+  `tAnswer_EN` text,
+  `eTopic` enum('Front','Admin','RiderApp','DriverApp','General') NOT NULL,
+  `vTitle_TL` text NOT NULL,
+  `tAnswer_TL` varchar(500) NOT NULL,
+  `eShowDetail` enum('Yes','No') NOT NULL DEFAULT 'No',
+  PRIMARY KEY (`iHelpDetailId`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+INSERT INTO help_detail VALUES("","","","","","","","","","");
+INSERT INTO help_detail VALUES("","","","","","","","","","");
+INSERT INTO help_detail VALUES("","","","","","","","","","");
+INSERT INTO help_detail VALUES("","","","","","","","","","");
+
+
+
+DROP TABLE help_detail_categories;
+
+CREATE TABLE `help_detail_categories` (
+  `iHelpDetailCategoryId` int(11) NOT NULL AUTO_INCREMENT,
+  `eStatus` enum('Active','Inactive') DEFAULT 'Active',
+  `iDisplayOrder` int(5) NOT NULL,
+  `vTitle` varchar(100) DEFAULT NULL,
+  `vImage` varchar(100) NOT NULL,
+  `vCode` varchar(100) NOT NULL,
+  `iUniqueId` int(11) NOT NULL,
+  PRIMARY KEY (`iHelpDetailCategoryId`)
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+INSERT INTO help_detail_categories VALUES("","","","","","","");
+INSERT INTO help_detail_categories VALUES("","","","","","","");
+INSERT INTO help_detail_categories VALUES("","","","","","","");
+INSERT INTO help_detail_categories VALUES("","","","","","","");
+INSERT INTO help_detail_categories VALUES("","","","","","","");
+INSERT INTO help_detail_categories VALUES("","","","","","","");
+
+
+
+DROP TABLE helps;
+
+CREATE TABLE `helps` (
+  `iHelpsId` int(11) NOT NULL AUTO_INCREMENT,
+  `iHelpscategoryId` int(11) NOT NULL,
+  `eStatus` enum('Active','Inactive') CHARACTER SET utf8 NOT NULL DEFAULT 'Active',
+  `iDisplayOrder` int(11) NOT NULL,
+  `vTitle` text CHARACTER SET utf8 NOT NULL,
+  `tDescription` text CHARACTER SET utf8 NOT NULL,
+  PRIMARY KEY (`iHelpsId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE helps_categories;
+
+CREATE TABLE `helps_categories` (
+  `iHelpscategoryId` int(11) NOT NULL AUTO_INCREMENT,
+  `eStatus` enum('Active','Inactive') CHARACTER SET utf8 NOT NULL DEFAULT 'Active',
+  `iDisplayOrder` int(11) NOT NULL,
+  `vTitle` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `eTopic` enum('Front','Admin','RiderApp','DriverApp','General') NOT NULL,
+  PRIMARY KEY (`iHelpscategoryId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE home_content;
+
+CREATE TABLE `home_content` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `vCode` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `header_first_label` varchar(350) CHARACTER SET utf8 NOT NULL,
+  `header_second_label` varchar(350) CHARACTER SET utf8 NOT NULL,
+  `home_banner_left_image` varchar(350) CHARACTER SET utf8 NOT NULL,
+  `left_banner_txt` text CHARACTER SET utf8 NOT NULL,
+  `home_banner_right_image` varchar(350) CHARACTER SET utf8 NOT NULL,
+  `right_banner_txt` text CHARACTER SET utf8 NOT NULL,
+  `third_sec_title` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_mysql500_ci NOT NULL,
+  `third_sec_desc` text CHARACTER SET utf8 NOT NULL,
+  `third_mid_image_one` varchar(350) CHARACTER SET utf8 NOT NULL,
+  `third_mid_title_one` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `third_mid_desc_one` text CHARACTER SET utf8 NOT NULL,
+  `third_mid_image_two` varchar(350) CHARACTER SET utf8 NOT NULL,
+  `third_mid_title_two` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `third_mid_desc_two` text CHARACTER SET utf8 NOT NULL,
+  `third_mid_image_three` varchar(350) CHARACTER SET utf8 NOT NULL,
+  `third_mid_title_three` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `third_mid_desc_three` text CHARACTER SET utf8 NOT NULL,
+  `mobile_app_bg_img` varchar(350) CHARACTER SET utf8 NOT NULL,
+  `mobile_app_left_img` varchar(350) CHARACTER SET utf8 NOT NULL,
+  `mobile_app_right_title` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `mobile_app_right_desc` text CHARACTER SET utf8 NOT NULL,
+  `taxi_app_bg_img` varchar(350) CHARACTER SET utf8 NOT NULL,
+  `taxi_app_left_img` varchar(350) CHARACTER SET utf8 NOT NULL,
+  `taxi_app_right_title` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `taxi_app_right_desc` text CHARACTER SET utf8 NOT NULL,
+  `driver_sec_first_label` text CHARACTER SET utf8 NOT NULL,
+  `driver_sec_second_label` text CHARACTER SET utf8 NOT NULL,
+  `eStatus` enum('Active','Inactive') CHARACTER SET utf8 NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=latin1;
+
+INSERT INTO home_content VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO home_content VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+
+
+
+DROP TABLE home_driver;
+
+CREATE TABLE `home_driver` (
+  `iDriverId` int(11) NOT NULL AUTO_INCREMENT,
+  `vImage` varchar(200) CHARACTER SET utf8 NOT NULL,
+  `vName_EN` varchar(200) CHARACTER SET utf8 NOT NULL,
+  `vDesignation_EN` varchar(200) CHARACTER SET utf8 NOT NULL,
+  `tText_EN` text CHARACTER SET utf8 NOT NULL,
+  `vName_TL` varchar(200) CHARACTER SET utf8 NOT NULL,
+  `vDesignation_TL` varchar(200) CHARACTER SET utf8 NOT NULL,
+  `tText_TL` text CHARACTER SET utf8 NOT NULL,
+  `iDisplayOrder` int(11) NOT NULL,
+  `eStatus` enum('Active','Inactive') CHARACTER SET utf8 NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`iDriverId`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+INSERT INTO home_driver VALUES("","","","","","","","","","");
+INSERT INTO home_driver VALUES("","","","","","","","","","");
+INSERT INTO home_driver VALUES("","","","","","","","","","");
+INSERT INTO home_driver VALUES("","","","","","","","","","");
+
+
+
+DROP TABLE home_screens;
+
+CREATE TABLE `home_screens` (
+  `iId` int(11) NOT NULL AUTO_INCREMENT,
+  `vImageTitle` varchar(255) NOT NULL,
+  `vImageName` varchar(255) NOT NULL,
+  `iDescOrd` varchar(255) NOT NULL,
+  `eStatus` enum('Active','Inactive') NOT NULL,
+  PRIMARY KEY (`iId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE hotel;
+
+CREATE TABLE `hotel` (
+  `iHotelId` int(11) NOT NULL AUTO_INCREMENT,
+  `vName` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `vLastName` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vEmail` varchar(100) NOT NULL,
+  `vPassword` varchar(255) NOT NULL,
+  `vCountry` varchar(255) NOT NULL,
+  `vPhone` varchar(50) NOT NULL,
+  `vImgName` varchar(255) NOT NULL DEFAULT 'NONE',
+  `vLogoutDev` enum('true','false') NOT NULL DEFAULT 'false',
+  `iGcmRegId` text NOT NULL,
+  `vLang` varchar(10) NOT NULL,
+  `eStatus` enum('Active','Inactive','Deleted') NOT NULL DEFAULT 'Active',
+  `vPhoneCode` varchar(10) NOT NULL,
+  `vCurrencyPassenger` varchar(255) NOT NULL,
+  `vZip` varchar(255) NOT NULL,
+  `vPassToken` varchar(255) NOT NULL,
+  `eDeviceType` enum('Android','Ios') NOT NULL DEFAULT 'Android',
+  `tRegistrationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `iAppVersion` int(11) NOT NULL DEFAULT '1',
+  `vLatitude` varchar(100) NOT NULL,
+  `vLongitude` varchar(100) NOT NULL,
+  `tLastOnline` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `vAddress` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `vPassword_token` varchar(255) NOT NULL,
+  `tSessionId` text,
+  PRIMARY KEY (`iHotelId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE language_label;
+
+CREATE TABLE `language_label` (
+  `LanguageLabelId` int(11) NOT NULL AUTO_INCREMENT,
+  `lPage_id` int(7) NOT NULL,
+  `vCode` varchar(5) NOT NULL,
+  `vLabel` varchar(100) NOT NULL,
+  `vValue` text NOT NULL,
+  `vScreen` varchar(100) NOT NULL,
+  `eScript` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `eStatus` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
+  `eDeviceType` enum('APP','WEB') NOT NULL DEFAULT 'APP',
+  PRIMARY KEY (`LanguageLabelId`)
+) ENGINE=MyISAM AUTO_INCREMENT=58379 DEFAULT CHARSET=utf8;
+
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+INSERT INTO language_label VALUES("","","","","","","","","");
+
+
+
+DROP TABLE language_label_other;
+
+CREATE TABLE `language_label_other` (
+  `LanguageLabelId` int(10) NOT NULL AUTO_INCREMENT,
+  `lPage_id` int(7) NOT NULL,
+  `vCode` varchar(5) NOT NULL,
+  `vLabel` varchar(100) NOT NULL,
+  `vValue` text NOT NULL,
+  `vScreen` varchar(100) NOT NULL,
+  `eDeviceType` enum('APP','WEB') NOT NULL DEFAULT 'APP',
+  PRIMARY KEY (`LanguageLabelId`)
+) ENGINE=MyISAM AUTO_INCREMENT=7124 DEFAULT CHARSET=utf8;
+
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+INSERT INTO language_label_other VALUES("","","","","","","");
+
+
+
+DROP TABLE language_master;
+
+CREATE TABLE `language_master` (
+  `iLanguageMasId` int(10) NOT NULL AUTO_INCREMENT,
+  `vTitle` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `vCode` varchar(5) CHARACTER SET utf8 NOT NULL,
+  `vGMapLangCode` varchar(5) NOT NULL DEFAULT 'en',
+  `vLangCode` varchar(5) NOT NULL,
+  `vCurrencyCode` varchar(100) NOT NULL,
+  `vCurrencySymbol` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `iDispOrder` int(10) NOT NULL,
+  `eStatus` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
+  `eDefault` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `eDirectionCode` enum('rtl','ltr') NOT NULL DEFAULT 'ltr',
+  PRIMARY KEY (`iLanguageMasId`)
+) ENGINE=MyISAM AUTO_INCREMENT=42 DEFAULT CHARSET=latin1;
+
+INSERT INTO language_master VALUES("","","","","","","","","","","");
+INSERT INTO language_master VALUES("","","","","","","","","","","");
+
+
+
+DROP TABLE language_page_details;
+
+CREATE TABLE `language_page_details` (
+  `lp_id` int(11) NOT NULL AUTO_INCREMENT,
+  `lp_name` varchar(255) NOT NULL,
+  `lp_link` varchar(255) NOT NULL,
+  `vDescription` varchar(500) NOT NULL,
+  `lp_type` enum('web','driver','rider') NOT NULL DEFAULT 'web',
+  PRIMARY KEY (`lp_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=131 DEFAULT CHARSET=latin1;
+
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+INSERT INTO language_page_details VALUES("","","","","");
+
+
+
+DROP TABLE location_master;
+
+CREATE TABLE `location_master` (
+  `iLocationId` int(10) NOT NULL AUTO_INCREMENT,
+  `iCountryId` int(11) NOT NULL,
+  `vLocationName` varchar(500) NOT NULL,
+  `tLatitude` text NOT NULL,
+  `tLongitude` text NOT NULL,
+  `eStatus` enum('Active','Inactive') NOT NULL,
+  `eFor` enum('Restrict','VehicleType','FixFare') NOT NULL DEFAULT 'Restrict',
+  PRIMARY KEY (`iLocationId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+DROP TABLE location_wise_fare;
+
+CREATE TABLE `location_wise_fare` (
+  `iLocatioId` int(11) NOT NULL AUTO_INCREMENT,
+  `iToLocationId` int(10) NOT NULL,
+  `iFromLocationId` int(10) NOT NULL,
+  `vToCity` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vFromCity` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `fFlatfare` float NOT NULL,
+  `eStatus` enum('Active','Inactive') CHARACTER SET utf8 NOT NULL DEFAULT 'Active',
+  `iVehicleTypeId` int(11) NOT NULL,
+  PRIMARY KEY (`iLocatioId`),
+  UNIQUE KEY `iLocatioId` (`iLocatioId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE log_file;
+
+CREATE TABLE `log_file` (
+  `iLogId` int(11) NOT NULL AUTO_INCREMENT,
+  `vLogName` varchar(100) NOT NULL,
+  `tDate` datetime NOT NULL,
+  `iCompanyId` int(11) NOT NULL DEFAULT '0',
+  `iDriverId` int(11) NOT NULL DEFAULT '0',
+  `eUserType` enum('driver','company') NOT NULL,
+  `eType` enum('licence','noc','certificate','insurance','permit','registeration') NOT NULL,
+  PRIMARY KEY (`iLogId`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+INSERT INTO log_file VALUES("","","","","","","");
+
+
+
+DROP TABLE make;
+
+CREATE TABLE `make` (
+  `iMakeId` int(10) NOT NULL AUTO_INCREMENT,
+  `vMake` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `eStatus` enum('Active','Inactive','Deleted') CHARACTER SET utf8 NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`iMakeId`)
+) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+INSERT INTO make VALUES("","","");
+
+
+
+DROP TABLE masking_numbers;
+
+CREATE TABLE `masking_numbers` (
+  `masknum_id` int(11) NOT NULL AUTO_INCREMENT,
+  `mask_number` varchar(100) NOT NULL,
+  `adding_date` datetime NOT NULL,
+  `vCountry` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `eStatus` enum('Active','Inactive') NOT NULL,
+  PRIMARY KEY (`masknum_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE member_log;
+
+CREATE TABLE `member_log` (
+  `iMemberLogId` int(11) NOT NULL AUTO_INCREMENT,
+  `iMemberId` int(11) NOT NULL,
+  `eMemberType` enum('Passenger','Driver') NOT NULL,
+  `eMemberLoginType` enum('AppLogin','WebLogin') NOT NULL,
+  `eDeviceType` enum('Android','Ios','Web') NOT NULL DEFAULT 'Web',
+  `dDateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `vIP` varchar(255) NOT NULL,
+  `eAutoLogin` enum('Yes','No') NOT NULL DEFAULT 'No',
+  PRIMARY KEY (`iMemberLogId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE model;
+
+CREATE TABLE `model` (
+  `iModelId` int(10) NOT NULL AUTO_INCREMENT,
+  `iMakeId` int(10) NOT NULL,
+  `vTitle` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `eStatus` enum('Active','Inactive','Deleted') CHARACTER SET utf8 NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`iModelId`)
+) ENGINE=MyISAM AUTO_INCREMENT=1242 DEFAULT CHARSET=latin1;
+
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+INSERT INTO model VALUES("","","","");
+
+
+
+DROP TABLE package_type;
+
+CREATE TABLE `package_type` (
+  `iPackageTypeId` int(10) NOT NULL AUTO_INCREMENT,
+  `vName` varchar(150) NOT NULL,
+  `eStatus` enum('Active','Inactive','Deleted') NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`iPackageTypeId`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+
+INSERT INTO package_type VALUES("","","");
+INSERT INTO package_type VALUES("","","");
+INSERT INTO package_type VALUES("","","");
+INSERT INTO package_type VALUES("","","");
+INSERT INTO package_type VALUES("","","");
+INSERT INTO package_type VALUES("","","");
+INSERT INTO package_type VALUES("","","");
+INSERT INTO package_type VALUES("","","");
+INSERT INTO package_type VALUES("","","");
+INSERT INTO package_type VALUES("","","");
+INSERT INTO package_type VALUES("","","");
+INSERT INTO package_type VALUES("","","");
+INSERT INTO package_type VALUES("","","");
+
+
+
+DROP TABLE pages;
+
+CREATE TABLE `pages` (
+  `iPageId` int(5) NOT NULL AUTO_INCREMENT,
+  `vPageName` varchar(500) DEFAULT NULL,
+  `iFrameCode` text,
+  `vImage` varchar(500) DEFAULT NULL,
+  `vImage1` varchar(500) NOT NULL,
+  `vTitle` varchar(500) DEFAULT NULL,
+  `tMetaKeyword` text,
+  `tMetaDescription` text,
+  `vPageTitle_EN` varchar(500) DEFAULT NULL,
+  `tPageDesc_EN` text,
+  `eStatus` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
+  `vPageTitle_TL` varchar(200) NOT NULL,
+  `tPageDesc_TL` text NOT NULL,
+  PRIMARY KEY (`iPageId`)
+) ENGINE=MyISAM AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
+
+INSERT INTO pages VALUES("","","","","","","","","","","","","");
+INSERT INTO pages VALUES("","","","","","","","","","","","","");
+INSERT INTO pages VALUES("","","","","","","","","","","","","");
+INSERT INTO pages VALUES("","","","","","","","","","","","","");
+INSERT INTO pages VALUES("","","","","","","","","","","","","");
+INSERT INTO pages VALUES("","","","","","","","","","","","","");
+INSERT INTO pages VALUES("","","","","","","","","","","","","");
+INSERT INTO pages VALUES("","","","","","","","","","","","","");
+INSERT INTO pages VALUES("","","","","","","","","","","","","");
+INSERT INTO pages VALUES("","","","","","","","","","","","","");
+INSERT INTO pages VALUES("","","","","","","","","","","","","");
+
+
+
+DROP TABLE passenger_requests;
+
+CREATE TABLE `passenger_requests` (
+  `iRequestId` int(11) NOT NULL AUTO_INCREMENT,
+  `tMessage` text CHARACTER SET utf8 NOT NULL,
+  `iUserId` int(11) NOT NULL,
+  `iDriverId` int(11) NOT NULL,
+  `iMsgCode` text CHARACTER SET utf8 NOT NULL,
+  `dAddedDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`iRequestId`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+INSERT INTO passenger_requests VALUES("","","","","","");
+INSERT INTO passenger_requests VALUES("","","","","","");
+INSERT INTO passenger_requests VALUES("","","","","","");
+
+
+
+DROP TABLE payments;
+
+CREATE TABLE `payments` (
+  `iPaymentId` int(11) NOT NULL AUTO_INCREMENT,
+  `tPaymentUserID` text NOT NULL,
+  `vPaymentUserStatus` text NOT NULL,
+  `ePaymentDriverStatus` enum('Paid','UnPaid') NOT NULL DEFAULT 'UnPaid',
+  `tPaymentDriverID` text NOT NULL,
+  `iTripId` int(11) NOT NULL COMMENT 'link with trips',
+  `fCommision` float NOT NULL DEFAULT '0',
+  `iAmountUser` float NOT NULL DEFAULT '0',
+  `iAmountDriver` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`iPaymentId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE pet_type;
+
+CREATE TABLE `pet_type` (
+  `iPetTypeId` int(10) NOT NULL AUTO_INCREMENT,
+  `vTitle_EN` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `vTitle_TL` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `eStatus` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`iPetTypeId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE preferences;
+
+CREATE TABLE `preferences` (
+  `iPreferenceId` int(11) NOT NULL AUTO_INCREMENT,
+  `vName` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `vPreferenceImage_Yes` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `vPreferenceImage_No` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `vYes_Title` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `vNo_Title` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `eStatus` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`iPreferenceId`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+
+INSERT INTO preferences VALUES("","","","","","","");
+INSERT INTO preferences VALUES("","","","","","","");
+INSERT INTO preferences VALUES("","","","","","","");
+INSERT INTO preferences VALUES("","","","","","","");
+
+
+
+DROP TABLE pushnotification_log;
+
+CREATE TABLE `pushnotification_log` (
+  `iPushnotificationId` int(11) NOT NULL AUTO_INCREMENT,
+  `eUserType` enum('driver','rider') NOT NULL,
+  `iUserId` int(7) NOT NULL,
+  `tMessage` text NOT NULL,
+  `dDateTime` datetime NOT NULL,
+  `IP_ADDRESS` varchar(225) NOT NULL,
+  PRIMARY KEY (`iPushnotificationId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE ratings_user_driver;
+
+CREATE TABLE `ratings_user_driver` (
+  `iRatingId` int(11) NOT NULL AUTO_INCREMENT,
+  `iTripId` int(11) NOT NULL,
+  `vRating1` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `tDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `eUserType` enum('Driver','Passenger') CHARACTER SET utf8 DEFAULT 'Passenger',
+  `vMessage` varchar(2500) CHARACTER SET utf8 NOT NULL,
+  PRIMARY KEY (`iRatingId`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+INSERT INTO ratings_user_driver VALUES("","","","","","");
+INSERT INTO ratings_user_driver VALUES("","","","","","");
+INSERT INTO ratings_user_driver VALUES("","","","","","");
+INSERT INTO ratings_user_driver VALUES("","","","","","");
+INSERT INTO ratings_user_driver VALUES("","","","","","");
+
+
+
+DROP TABLE register_driver;
+
+CREATE TABLE `register_driver` (
+  `iDriverId` int(11) NOT NULL AUTO_INCREMENT,
+  `iRefUserId` int(11) NOT NULL,
+  `eRefType` enum('Driver','Rider') NOT NULL,
+  `vFbId` varchar(500) NOT NULL DEFAULT '0',
+  `iCompanyId` int(11) NOT NULL,
+  `vName` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `vLastName` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vEmail` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `vLoginId` varchar(100) NOT NULL,
+  `vPassword` varchar(100) NOT NULL,
+  `eGender` enum('','Male','Female') CHARACTER SET utf8 NOT NULL,
+  `vCode` varchar(50) NOT NULL,
+  `vPhone` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `vLang` varchar(50) NOT NULL,
+  `vLatitude` varchar(50) NOT NULL,
+  `vLongitude` varchar(50) NOT NULL,
+  `iDriverVehicleId` varchar(50) NOT NULL,
+  `vCompany` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vCaddress` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vCadress2` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vCity` varchar(10) NOT NULL,
+  `vState` varchar(10) NOT NULL,
+  `vZip` varchar(255) NOT NULL,
+  `vInviteCode` varchar(255) NOT NULL,
+  `dBirthDate` date NOT NULL,
+  `vFathersName` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vBackCheck` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vServiceLoc` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `vAvailability` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `vCarType` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `vAvgRating` varchar(255) NOT NULL DEFAULT '0.0',
+  `iGcmRegId` text NOT NULL,
+  `vImage` varchar(255) NOT NULL,
+  `vCreditCard` varchar(255) NOT NULL,
+  `vExpMonth` varchar(255) NOT NULL,
+  `vExpYear` varchar(255) NOT NULL,
+  `vCvv` varchar(255) NOT NULL,
+  `iTripId` int(11) NOT NULL,
+  `vTripStatus` varchar(50) NOT NULL DEFAULT 'NONE',
+  `eStatus` enum('active','inactive','Deleted','Suspend') CHARACTER SET utf8 NOT NULL DEFAULT 'inactive',
+  `vVat` varchar(10) NOT NULL,
+  `eAccess` enum('Deaf','None') NOT NULL DEFAULT 'None',
+  `vCountry` varchar(10) NOT NULL,
+  `tLastOnline` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `tOnline` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `vLicence` varchar(255) NOT NULL,
+  `vNoc` varchar(255) NOT NULL,
+  `vCerti` varchar(255) NOT NULL,
+  `dLicenceExp` date NOT NULL,
+  `eDeviceType` enum('Android','Ios') NOT NULL DEFAULT 'Android',
+  `vCurrencyDriver` varchar(255) NOT NULL,
+  `tRegistrationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `eSentNotification` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `dSentNotification` date NOT NULL,
+  `eDeliverModule` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `iAppVersion` int(11) NOT NULL DEFAULT '1',
+  `vRefCode` varchar(50) NOT NULL,
+  `dRefDate` datetime NOT NULL,
+  `vPaymentEmail` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `vBankAccountHolderName` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `vAccountNumber` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `vBankLocation` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `vBankName` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `vBIC_SWIFT_Code` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `eEmailVerified` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `ePhoneVerified` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `tProfileDescription` text CHARACTER SET utf8 NOT NULL,
+  `vStripeToken` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vStripeCusId` varchar(255) CHARACTER SET utf8 NOT NULL COMMENT 'Working as cardUserKey for iyzipay payment gateway',
+  `vPasswordToken` varchar(255) NOT NULL,
+  `eSignUpType` enum('Normal','Facebook','Twitter','Google') NOT NULL DEFAULT 'Normal',
+  `tSessionId` text CHARACTER SET utf8 NOT NULL,
+  `vPassword_token` varchar(255) NOT NULL,
+  `vRideCountry` varchar(10) NOT NULL,
+  `tDeviceSessionId` text CHARACTER SET utf8 NOT NULL,
+  `eFemaleOnlyReqAccept` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `vFirebaseDeviceToken` text NOT NULL,
+  `eLogout` enum('Yes','No') NOT NULL DEFAULT 'Yes',
+  `vTimeZone` varchar(255) NOT NULL,
+  `tLocationUpdateDate` datetime NOT NULL,
+  `vWorkLocation` text NOT NULL,
+  `vWorkLocationLatitude` text NOT NULL,
+  `vWorkLocationLongitude` text NOT NULL,
+  `vWorkLocationRadius` varchar(200) NOT NULL,
+  `eChangeLang` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `vVerificationCount` int(11) NOT NULL DEFAULT '0',
+  `dSendverificationDate` datetime NOT NULL,
+  `eSelectWorkLocation` enum('Dynamic','Fixed') CHARACTER SET utf8 NOT NULL DEFAULT 'Dynamic',
+  PRIMARY KEY (`iDriverId`),
+  KEY `iCompanyId` (`iCompanyId`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+INSERT INTO register_driver VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+
+
+
+DROP TABLE register_user;
+
+CREATE TABLE `register_user` (
+  `iUserId` int(11) NOT NULL AUTO_INCREMENT,
+  `iRefUserId` int(11) NOT NULL,
+  `eRefType` enum('Driver','Rider') NOT NULL,
+  `vFbId` varchar(100) NOT NULL DEFAULT '0',
+  `iHotelId` int(11) NOT NULL,
+  `vName` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `vLastName` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vEmail` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `vPassword` varchar(255) NOT NULL,
+  `vCountry` varchar(10) NOT NULL,
+  `vState` varchar(255) NOT NULL,
+  `vPhone` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `eGender` enum('','Male','Female') CHARACTER SET utf8 NOT NULL,
+  `vCreditCard` varchar(255) NOT NULL,
+  `dBirthDate` date NOT NULL,
+  `vExpMonth` varchar(255) NOT NULL,
+  `vExpYear` varchar(255) NOT NULL,
+  `vCvv` varchar(255) NOT NULL,
+  `vImgName` varchar(255) NOT NULL,
+  `vAvgRating` varchar(100) NOT NULL DEFAULT '0.0',
+  `vLogoutDev` enum('true','false') NOT NULL DEFAULT 'false',
+  `iGcmRegId` text NOT NULL,
+  `vCallFromDriver` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `iTripId` int(11) NOT NULL DEFAULT '0' COMMENT 'Link with trips',
+  `vTripStatus` varchar(25) NOT NULL DEFAULT 'NONE' COMMENT 'Link with trips ''iActive''',
+  `vTripPaymentMode` enum('Cash','Paypal','NONE','Card') NOT NULL DEFAULT 'NONE',
+  `iSelectedCarType` int(11) NOT NULL,
+  `fPickUpPrice` float NOT NULL DEFAULT '1',
+  `fNightPrice` float NOT NULL DEFAULT '1',
+  `tDestinationLatitude` text NOT NULL,
+  `tDestinationLongitude` text NOT NULL,
+  `tDestinationAddress` text CHARACTER SET utf8 NOT NULL,
+  `vInviteCode` varchar(100) NOT NULL,
+  `vCouponCode` varchar(255) NOT NULL,
+  `vLang` varchar(10) NOT NULL,
+  `eStatus` enum('Active','Inactive','Deleted') CHARACTER SET utf8 NOT NULL DEFAULT 'Active',
+  `vPhoneCode` varchar(10) CHARACTER SET utf8 NOT NULL,
+  `vZip` varchar(255) NOT NULL,
+  `vPassToken` varchar(255) NOT NULL,
+  `eDeviceType` enum('Android','Ios') NOT NULL DEFAULT 'Android',
+  `vCurrencyPassenger` varchar(300) NOT NULL,
+  `tRegistrationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `iCabBookingId` int(11) NOT NULL COMMENT 'related to cab_booking ',
+  `vStripeToken` varchar(255) NOT NULL,
+  `vStripeCusId` varchar(255) CHARACTER SET utf8 NOT NULL COMMENT 'Working as cardUserKey for iyzipay payment gateway',
+  `eType` enum('Ride','Deliver','UberX') NOT NULL DEFAULT 'Ride',
+  `iPackageTypeId` int(11) NOT NULL,
+  `vReceiverName` varchar(50) NOT NULL,
+  `vReceiverMobile` varchar(50) NOT NULL,
+  `tPickUpIns` text NOT NULL,
+  `tDeliveryIns` text NOT NULL,
+  `tPackageDetails` text NOT NULL,
+  `eDeliverModule` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `iUserPetId` int(11) NOT NULL DEFAULT '0',
+  `iAppVersion` int(11) NOT NULL DEFAULT '1',
+  `vRefCode` varchar(50) NOT NULL,
+  `dRefDate` datetime NOT NULL,
+  `vLatitude` varchar(100) NOT NULL,
+  `vLongitude` varchar(100) NOT NULL,
+  `tLastOnline` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `eEmailVerified` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `ePhoneVerified` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `iQty` int(11) NOT NULL DEFAULT '1',
+  `iUserVehicleId` int(11) NOT NULL,
+  `vPasswordToken` varchar(255) NOT NULL,
+  `eSignUpType` enum('Normal','Facebook','Twitter','Google') NOT NULL DEFAULT 'Normal',
+  `tSessionId` text CHARACTER SET utf8 NOT NULL,
+  `vPassword_token` varchar(255) NOT NULL,
+  `vRideCountry` varchar(10) NOT NULL,
+  `tDeviceSessionId` text CHARACTER SET utf8 NOT NULL,
+  `eHail` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `vFirebaseDeviceToken` text NOT NULL,
+  `fTollPrice` float NOT NULL DEFAULT '0',
+  `vTollPriceCurrencyCode` varchar(300) NOT NULL,
+  `eTollSkipped` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `vTimeZone` varchar(255) NOT NULL,
+  `eLogout` enum('Yes','No') NOT NULL DEFAULT 'Yes',
+  `tLocationUpdateDate` datetime NOT NULL,
+  `eIs_Kiosk` enum('Yes','No') CHARACTER SET utf8 NOT NULL DEFAULT 'No',
+  `eChangeLang` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `vVerificationCount` int(11) NOT NULL DEFAULT '0',
+  `dSendverificationDate` datetime NOT NULL,
+  `fTripsOutStandingAmount` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`iUserId`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+INSERT INTO register_user VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO register_user VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+
+
+
+DROP TABLE rental_package;
+
+CREATE TABLE `rental_package` (
+  `iRentalPackageId` int(11) NOT NULL AUTO_INCREMENT,
+  `iVehicleTypeId` int(11) NOT NULL,
+  `vPackageName_EN` varchar(255) NOT NULL,
+  `vPackageName_TL` varchar(255) NOT NULL,
+  `fPrice` float NOT NULL,
+  `fKiloMeter` float NOT NULL,
+  `fHour` float NOT NULL,
+  `fPricePerKM` float NOT NULL,
+  `fPricePerHour` float NOT NULL COMMENT 'Store price for a minute',
+  PRIMARY KEY (`iRentalPackageId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='how many vehicles we have';
+
+
+
+
+DROP TABLE restricted_negative_area;
+
+CREATE TABLE `restricted_negative_area` (
+  `iRestrictedNegativeId` int(10) NOT NULL AUTO_INCREMENT,
+  `iLocationId` int(11) NOT NULL,
+  `iCountryId` int(10) NOT NULL,
+  `iStateId` int(10) NOT NULL,
+  `iCityId` int(10) NOT NULL,
+  `vAddress` text NOT NULL,
+  `eRestrictType` enum('All','Pick Up','Drop Off') NOT NULL DEFAULT 'All',
+  `eType` enum('Allowed','Disallowed') NOT NULL,
+  `eStatus` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`iRestrictedNegativeId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='master table for restricted and negative area for taxis';
+
+
+
+
+DROP TABLE send_message_templates;
+
+CREATE TABLE `send_message_templates` (
+  `iSendMessageId` int(5) NOT NULL AUTO_INCREMENT,
+  `vEmail_Code` varchar(500) DEFAULT NULL,
+  `eMIME` enum('html','text') DEFAULT NULL,
+  `vSection` enum('Job Seeker','Artist','Franchisee','Employer') DEFAULT NULL,
+  `eStatus` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
+  `vSubject_EN` varchar(500) DEFAULT NULL,
+  `vBody_EN` text,
+  `vSubject_TL` varchar(200) NOT NULL,
+  `vBody_TL` text NOT NULL,
+  PRIMARY KEY (`iSendMessageId`)
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+
+INSERT INTO send_message_templates VALUES("","","","","","","","","");
+INSERT INTO send_message_templates VALUES("","","","","","","","","");
+INSERT INTO send_message_templates VALUES("","","","","","","","","");
+INSERT INTO send_message_templates VALUES("","","","","","","","","");
+INSERT INTO send_message_templates VALUES("","","","","","","","","");
+INSERT INTO send_message_templates VALUES("","","","","","","","","");
+INSERT INTO send_message_templates VALUES("","","","","","","","","");
+INSERT INTO send_message_templates VALUES("","","","","","","","","");
+INSERT INTO send_message_templates VALUES("","","","","","","","","");
+INSERT INTO send_message_templates VALUES("","","","","","","","","");
+INSERT INTO send_message_templates VALUES("","","","","","","","","");
+INSERT INTO send_message_templates VALUES("","","","","","","","","");
+
+
+
+DROP TABLE seo_sections;
+
+CREATE TABLE `seo_sections` (
+  `iId` int(11) NOT NULL AUTO_INCREMENT,
+  `vPagename` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `vPagetitle` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `vMetakeyword` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `tDescription` text CHARACTER SET utf8 NOT NULL,
+  PRIMARY KEY (`iId`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+
+INSERT INTO seo_sections VALUES("","","","","");
+INSERT INTO seo_sections VALUES("","","","","");
+INSERT INTO seo_sections VALUES("","","","","");
+INSERT INTO seo_sections VALUES("","","","","");
+INSERT INTO seo_sections VALUES("","","","","");
+INSERT INTO seo_sections VALUES("","","","","");
+INSERT INTO seo_sections VALUES("","","","","");
+INSERT INTO seo_sections VALUES("","","","","");
+INSERT INTO seo_sections VALUES("","","","","");
+
+
+
+DROP TABLE service_pro_amount;
+
+CREATE TABLE `service_pro_amount` (
+  `iServProAmntId` int(11) NOT NULL AUTO_INCREMENT,
+  `iDriverVehicleId` int(11) NOT NULL,
+  `iVehicleTypeId` int(11) NOT NULL,
+  `fAmount` float NOT NULL,
+  PRIMARY KEY (`iServProAmntId`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+
+INSERT INTO service_pro_amount VALUES("","","","");
+INSERT INTO service_pro_amount VALUES("","","","");
+INSERT INTO service_pro_amount VALUES("","","","");
+INSERT INTO service_pro_amount VALUES("","","","");
+INSERT INTO service_pro_amount VALUES("","","","");
+INSERT INTO service_pro_amount VALUES("","","","");
+INSERT INTO service_pro_amount VALUES("","","","");
+INSERT INTO service_pro_amount VALUES("","","","");
+INSERT INTO service_pro_amount VALUES("","","","");
+INSERT INTO service_pro_amount VALUES("","","","");
+INSERT INTO service_pro_amount VALUES("","","","");
+INSERT INTO service_pro_amount VALUES("","","","");
+INSERT INTO service_pro_amount VALUES("","","","");
+
+
+
+DROP TABLE sms_templates;
+
+CREATE TABLE `sms_templates` (
+  `iSMSId` int(5) NOT NULL AUTO_INCREMENT,
+  `vSMS_Code` varchar(500) DEFAULT NULL,
+  `eStatus` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
+  `vBody_EN` text,
+  `vBody_TL` text NOT NULL,
+  PRIMARY KEY (`iSMSId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
+
+DROP TABLE state;
+
+CREATE TABLE `state` (
+  `iStateId` int(11) NOT NULL AUTO_INCREMENT,
+  `iCountryId` int(11) NOT NULL DEFAULT '0',
+  `vStateCode` varchar(32) CHARACTER SET utf8 NOT NULL DEFAULT '',
+  `vState` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `eStatus` enum('Active','Inactive','Deleted') CHARACTER SET utf8 NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`iStateId`)
+) ENGINE=MyISAM AUTO_INCREMENT=3848 DEFAULT CHARSET=latin1;
+
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+INSERT INTO state VALUES("","","","","");
+
+
+
+DROP TABLE temp_trips_delivery_locations;
+
+CREATE TABLE `temp_trips_delivery_locations` (
+  `iTempTripDeliveryLocationId` int(10) NOT NULL AUTO_INCREMENT,
+  `iTripId` int(10) NOT NULL COMMENT 'Linked with Trips table',
+  `iCabBookingId` int(11) NOT NULL COMMENT 'Link with trips_temp table',
+  `eRequestType` enum('Ridenow','Ridelater') NOT NULL DEFAULT 'Ridenow',
+  `iRecipientId` int(10) NOT NULL,
+  `vReceiverName` varchar(500) NOT NULL,
+  `vReceiverMobile` varchar(500) NOT NULL,
+  `vReceiverLatitude` varchar(200) NOT NULL,
+  `vReceiverLongitude` varchar(200) NOT NULL,
+  `vReceiverAddress` text NOT NULL,
+  `tPickUpIns` text NOT NULL,
+  `tDeliveryIns` text NOT NULL,
+  `tPackageDetails` text NOT NULL,
+  `tShipmentDetails` text NOT NULL,
+  `tAditionalNotes` text NOT NULL,
+  `vWeight` varchar(100) NOT NULL,
+  `vQuantity` varchar(100) NOT NULL,
+  `tArrivedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `tStartTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `tEndTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `tDeliveredTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `vCancelReason` varchar(500) NOT NULL,
+  `vCancelComment` varchar(500) NOT NULL,
+  `eCancelled` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `tStartLat` varchar(500) NOT NULL,
+  `tStartLong` varchar(500) NOT NULL,
+  `tEndLat` varchar(500) NOT NULL,
+  `tEndLong` varchar(500) NOT NULL,
+  `tSaddress` text NOT NULL,
+  `tDaddress` text NOT NULL,
+  `iFare` float NOT NULL,
+  `fPricePerKM` float NOT NULL,
+  `iBaseFare` float NOT NULL,
+  `fPricePerMin` float NOT NULL,
+  `fCommision` float NOT NULL,
+  `fDistance` float NOT NULL,
+  `iActive` enum('Active','Finished','Canceled','On Going Trip') NOT NULL,
+  `ePaymentCollect` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `vDeliveryConfirmCode` varchar(100) NOT NULL,
+  `fMinFareDiff` float(10,2) NOT NULL,
+  `fSurgePriceDiff` float NOT NULL,
+  `fTripGenerateFare` float NOT NULL,
+  `fRideAlongShipment` float NOT NULL,
+  `iPackageTypeId` int(11) NOT NULL,
+  `ePaymentByReceiver` enum('Yes','No') NOT NULL DEFAULT 'No',
+  PRIMARY KEY (`iTempTripDeliveryLocationId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+DROP TABLE trip_call_masking;
+
+CREATE TABLE `trip_call_masking` (
+  `iTripCallmaskid` int(11) NOT NULL AUTO_INCREMENT,
+  `iTripid` int(11) NOT NULL,
+  `DriverPhone` varchar(100) NOT NULL,
+  `DriverPhoneCode` varchar(10) NOT NULL,
+  `RiderPhone` varchar(100) NOT NULL,
+  `UserPhoneCode` varchar(10) NOT NULL,
+  `mask_number` varchar(100) NOT NULL,
+  `maskId` int(11) NOT NULL,
+  `call_limit` int(10) NOT NULL,
+  PRIMARY KEY (`iTripCallmaskid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE trip_destinations;
+
+CREATE TABLE `trip_destinations` (
+  `iTripDestinationId` int(11) NOT NULL AUTO_INCREMENT,
+  `iTripId` int(11) NOT NULL,
+  `tDaddress` text CHARACTER SET utf8 NOT NULL,
+  `tEndLat` text NOT NULL,
+  `tEndLong` text NOT NULL,
+  `tDriverLatitude` text NOT NULL,
+  `tDriverLongitude` text NOT NULL,
+  `eUserType` enum('Driver','Passenger') NOT NULL,
+  `dAddedDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`iTripDestinationId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE trip_help_detail;
+
+CREATE TABLE `trip_help_detail` (
+  `iTripHelpDetailId` int(11) NOT NULL AUTO_INCREMENT,
+  `iTripId` int(11) NOT NULL,
+  `iUserId` int(11) NOT NULL,
+  `iHelpDetailId` int(11) NOT NULL,
+  `vComment` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `tDate` datetime NOT NULL,
+  PRIMARY KEY (`iTripHelpDetailId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE trip_messages;
+
+CREATE TABLE `trip_messages` (
+  `iMessageId` int(10) NOT NULL AUTO_INCREMENT,
+  `iTripId` int(10) NOT NULL,
+  `iThreadId` int(10) NOT NULL,
+  `iFromMemberId` int(10) NOT NULL,
+  `iToMemberId` int(10) NOT NULL,
+  `vSubject` varchar(500) NOT NULL,
+  `tMessage` text NOT NULL,
+  `dAddedDate` datetime NOT NULL,
+  `eStatus` enum('Read','Unread') CHARACTER SET latin1 NOT NULL,
+  `eUserType` enum('Passenger','Driver') NOT NULL,
+  PRIMARY KEY (`iMessageId`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+INSERT INTO trip_messages VALUES("","","","","","","","","","");
+INSERT INTO trip_messages VALUES("","","","","","","","","","");
+INSERT INTO trip_messages VALUES("","","","","","","","","","");
+
+
+
+DROP TABLE trip_outstanding_amount;
+
+CREATE TABLE `trip_outstanding_amount` (
+  `iTripOutstandId` int(11) NOT NULL AUTO_INCREMENT,
+  `iTripId` int(11) NOT NULL,
+  `iUserId` int(11) NOT NULL,
+  `iDriverId` int(11) NOT NULL,
+  `fWalletDebit` float NOT NULL DEFAULT '0',
+  `fCancellationFare` float NOT NULL,
+  `fPendingAmount` float NOT NULL DEFAULT '0',
+  `fCommision` float NOT NULL DEFAULT '0',
+  `fDriverPendingAmount` float NOT NULL DEFAULT '0',
+  `fRatio_USD` double(10,4) NOT NULL,
+  `fRatio_PHP` double(10,4) NOT NULL,
+  `ePaidByPassenger` enum('Yes','No') CHARACTER SET utf8 NOT NULL DEFAULT 'No',
+  `ePaidToDriver` enum('Yes','No') CHARACTER SET utf8 NOT NULL DEFAULT 'No',
+  `vTripPaymentMode` enum('Cash','Paypal','Card') NOT NULL,
+  `vTripAdjusmentId` varchar(100) NOT NULL,
+  PRIMARY KEY (`iTripOutstandId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE trip_status_messages;
+
+CREATE TABLE `trip_status_messages` (
+  `iStatusId` int(11) NOT NULL AUTO_INCREMENT,
+  `iTripId` int(11) NOT NULL,
+  `iDriverId` int(11) NOT NULL,
+  `iUserId` int(11) NOT NULL,
+  `tMessage` text CHARACTER SET utf8 NOT NULL,
+  `eFromUserType` enum('Driver','Passenger','') NOT NULL DEFAULT '',
+  `eToUserType` enum('Driver','Passenger','') NOT NULL DEFAULT '',
+  `eReceived` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `dAddedDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`iStatusId`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+
+INSERT INTO trip_status_messages VALUES("","","","","","","","","");
+INSERT INTO trip_status_messages VALUES("","","","","","","","","");
+INSERT INTO trip_status_messages VALUES("","","","","","","","","");
+INSERT INTO trip_status_messages VALUES("","","","","","","","","");
+INSERT INTO trip_status_messages VALUES("","","","","","","","","");
+INSERT INTO trip_status_messages VALUES("","","","","","","","","");
+INSERT INTO trip_status_messages VALUES("","","","","","","","","");
+INSERT INTO trip_status_messages VALUES("","","","","","","","","");
+INSERT INTO trip_status_messages VALUES("","","","","","","","","");
+INSERT INTO trip_status_messages VALUES("","","","","","","","","");
+INSERT INTO trip_status_messages VALUES("","","","","","","","","");
+INSERT INTO trip_status_messages VALUES("","","","","","","","","");
+
+
+
+DROP TABLE trip_times;
+
+CREATE TABLE `trip_times` (
+  `iTripTimeId` int(11) NOT NULL AUTO_INCREMENT,
+  `iTripId` int(11) NOT NULL,
+  `dResumeTime` datetime NOT NULL,
+  `dPauseTime` datetime NOT NULL,
+  PRIMARY KEY (`iTripTimeId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE trips;
+
+CREATE TABLE `trips` (
+  `iTripId` int(11) NOT NULL AUTO_INCREMENT COMMENT 'unique auto increment id',
+  `vRideNo` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `iUserId` int(11) NOT NULL COMMENT 'Link with register_info',
+  `iDriverId` int(11) NOT NULL COMMENT 'Link with registration_driver_detail',
+  `iHotelId` int(11) NOT NULL,
+  `tTripRequestDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `tDriverArrivedDate` datetime NOT NULL,
+  `tStartDate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `tEndDate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `iDriverVehicleId` int(11) NOT NULL COMMENT 'Link with driver_vehicle',
+  `tStartLat` text NOT NULL,
+  `tStartLong` text NOT NULL,
+  `tEndLat` text NOT NULL,
+  `tEndLong` text NOT NULL,
+  `tSaddress` text CHARACTER SET utf8 NOT NULL,
+  `tDaddress` text CHARACTER SET utf8 NOT NULL,
+  `iFare` float NOT NULL,
+  `fPricePerKM` float NOT NULL COMMENT 'link with vehicle_type',
+  `iBaseFare` float NOT NULL,
+  `fPricePerMin` float NOT NULL DEFAULT '1.5' COMMENT 'link with vehicle_type',
+  `fCommision` float NOT NULL,
+  `fDistance` float DEFAULT '0',
+  `fDuration` float NOT NULL,
+  `iActive` enum('Active','Canceled','Finished','On Going Trip') NOT NULL COMMENT 'Active,On Going Trip, Finished, Canceled ',
+  `iVerificationCode` int(11) NOT NULL,
+  `eVerified` enum('Verified','Not Verified') NOT NULL DEFAULT 'Not Verified',
+  `eCarType` enum('CarX','CarGo') NOT NULL,
+  `iVehicleTypeId` int(11) NOT NULL COMMENT 'link with vehicle_type',
+  `iRentalPackageId` int(11) NOT NULL COMMENT 'linked to rental_package table',
+  `fPickUpPrice` float NOT NULL DEFAULT '1',
+  `fNightPrice` float NOT NULL DEFAULT '1',
+  `vTripPaymentMode` enum('Cash','Paypal','Card') NOT NULL,
+  `vCurrencyPassenger` varchar(300) NOT NULL,
+  `vCurrencyDriver` varchar(255) NOT NULL,
+  `fRatioPassenger` float NOT NULL,
+  `fRatioDriver` float NOT NULL,
+  `ePayment_request` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `vCancelReason` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vCancelComment` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `eCancelled` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `vCouponCode` varchar(255) NOT NULL,
+  `vDiscount` varchar(20) NOT NULL,
+  `fDiscount` float NOT NULL DEFAULT '0',
+  `eDriverPaymentStatus` enum('Settelled','Unsettelled') NOT NULL DEFAULT 'Unsettelled',
+  `ePaymentCollect` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `ePaymentCollect_Delivery` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `eType` enum('Ride','Deliver','UberX') NOT NULL DEFAULT 'Ride',
+  `iPackageTypeId` int(11) NOT NULL,
+  `vReceiverName` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `vReceiverMobile` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `tPickUpIns` text CHARACTER SET utf8 NOT NULL,
+  `tDeliveryIns` text CHARACTER SET utf8 NOT NULL,
+  `tPackageDetails` text CHARACTER SET utf8 NOT NULL,
+  `iUserPetId` int(11) NOT NULL DEFAULT '0',
+  `vDeliveryConfirmCode` varchar(55) NOT NULL,
+  `fRatio_USD` double(10,4) NOT NULL,
+  `fRatio_PHP` double(10,4) NOT NULL,
+  `eFareType` enum('Regular','Fixed','Hourly') NOT NULL COMMENT 'to see the trip is of fixed price or regular',
+  `fMinFareDiff` float NOT NULL DEFAULT '0',
+  `fWalletDebit` float NOT NULL DEFAULT '0' COMMENT 'wallet amount debited for this trip',
+  `fSurgePriceDiff` float NOT NULL DEFAULT '0' COMMENT 'applied surge price diff',
+  `vBeforeImage` varchar(255) NOT NULL,
+  `vAfterImage` varchar(255) NOT NULL,
+  `fTripGenerateFare` float NOT NULL DEFAULT '0',
+  `fGDtime` text NOT NULL,
+  `fGDdistance` text NOT NULL,
+  `fTipPrice` float NOT NULL DEFAULT '0',
+  `iQty` int(11) NOT NULL DEFAULT '1',
+  `fVisitFee` float NOT NULL DEFAULT '0',
+  `fMaterialFee` float NOT NULL DEFAULT '0',
+  `fMiscFee` float NOT NULL DEFAULT '0',
+  `fDriverDiscount` float NOT NULL DEFAULT '0',
+  `fCancellationFare` float NOT NULL,
+  `eCancelChargeFailed` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `eCancelledBy` enum('','Passenger','Driver') NOT NULL DEFAULT '',
+  `vCountryUnitRider` varchar(100) NOT NULL,
+  `vCountryUnitDriver` varchar(100) NOT NULL,
+  `fTollPrice` float NOT NULL DEFAULT '0',
+  `vTollPriceCurrencyCode` varchar(300) NOT NULL,
+  `eTollSkipped` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `eHailTrip` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `dPauseTime` datetime NOT NULL,
+  `tTotalPauseTime` text NOT NULL,
+  `vTimeZone` varchar(255) NOT NULL,
+  `iUserAddressId` int(11) NOT NULL DEFAULT '0',
+  `tUserComment` text CHARACTER SET utf8 NOT NULL,
+  `eBeforeUpload` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `eAfterUpload` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `ePaymentByReceiver` enum('Yes','No') NOT NULL DEFAULT 'No' COMMENT 'multi-delivery',
+  `eFareGenerated` enum('Yes','No') NOT NULL DEFAULT 'No' COMMENT 'multi-delivery',
+  `iRunningTripDeliveryNo` int(11) NOT NULL DEFAULT '0' COMMENT 'multi-delivery',
+  `eSignVerification` enum('Yes','No') NOT NULL DEFAULT 'No' COMMENT 'multi-delivery',
+  `vSignImage` varchar(255) NOT NULL COMMENT 'multi-delivery',
+  `iCabBookingId` int(11) NOT NULL DEFAULT '0',
+  `iCabRequestId` int(11) NOT NULL DEFAULT '0',
+  `fTax1` float NOT NULL DEFAULT '0',
+  `fTax2` float NOT NULL DEFAULT '0',
+  `eFlatTrip` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `fFlatTripPrice` float NOT NULL DEFAULT '0',
+  `fWaitingFees` float NOT NULL DEFAULT '0',
+  `iAirportLocationId` int(11) NOT NULL DEFAULT '0',
+  `eAirportLocation` enum('Yes','No') CHARACTER SET utf8 NOT NULL DEFAULT 'No',
+  `fOutStandingAmount` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`iTripId`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+INSERT INTO trips VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO trips VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO trips VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+
+
+
+DROP TABLE trips_delivery_locations;
+
+CREATE TABLE `trips_delivery_locations` (
+  `iTripDeliveryLocationId` int(10) NOT NULL AUTO_INCREMENT,
+  `tPickUpIns` text NOT NULL COMMENT 'Use for strret,building,flat number',
+  `tDeliveryIns` text NOT NULL,
+  `tPackageDetails` text NOT NULL,
+  `iTripId` int(10) NOT NULL COMMENT 'Linked with Trips table',
+  `iCabBookingId` int(11) NOT NULL COMMENT 'Link with trips_temp table',
+  `eRequestType` enum('Ridenow','Ridelater') NOT NULL DEFAULT 'Ridenow',
+  `iTempReceiverId` int(10) NOT NULL,
+  `iRecipientId` int(10) NOT NULL,
+  `vReceiverName` varchar(500) NOT NULL,
+  `vReceiverMobile` varchar(500) NOT NULL,
+  `vReceiverLatitude` varchar(200) NOT NULL,
+  `vReceiverLongitude` varchar(200) NOT NULL,
+  `vReceiverAddress` text NOT NULL,
+  `iPackageTypeId` int(10) NOT NULL,
+  `tShipmentDetails` text NOT NULL,
+  `tAditionalNotes` text NOT NULL,
+  `vWeight` varchar(100) NOT NULL,
+  `vQuantity` varchar(100) NOT NULL,
+  `tArrivedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `tStartTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `tEndTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `tDeliveredTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `vCancelReason` varchar(500) NOT NULL,
+  `vCancelComment` varchar(500) NOT NULL,
+  `eCancelled` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `tStartLat` varchar(500) NOT NULL,
+  `tStartLong` varchar(500) NOT NULL,
+  `tEndLat` varchar(500) NOT NULL,
+  `tEndLong` varchar(500) NOT NULL,
+  `tSaddress` text NOT NULL,
+  `tDaddress` text NOT NULL,
+  `iFare` float NOT NULL,
+  `fPricePerKM` float NOT NULL,
+  `iBaseFare` float NOT NULL,
+  `fPricePerMin` float NOT NULL,
+  `fCommision` float NOT NULL,
+  `fDistance` float NOT NULL,
+  `iActive` enum('Active','Finished','Canceled','On Going Trip') NOT NULL,
+  `ePaymentCollect` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `vDeliveryConfirmCode` varchar(100) NOT NULL,
+  `fMinFareDiff` float(10,2) NOT NULL,
+  `fSurgePriceDiff` float NOT NULL,
+  `fTripGenerateFare` float NOT NULL,
+  `fRideAlongShipment` float NOT NULL,
+  `ePaymentByReceiver` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `eSignVerification` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `vSignImage` varchar(255) NOT NULL,
+  PRIMARY KEY (`iTripDeliveryLocationId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+DROP TABLE trips_locations;
+
+CREATE TABLE `trips_locations` (
+  `iTripLocationId` int(3) NOT NULL AUTO_INCREMENT,
+  `iTripId` int(11) NOT NULL COMMENT 'Link with Trips',
+  `tDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `tPlatitudes` longtext NOT NULL,
+  `tPlongitudes` longtext NOT NULL,
+  PRIMARY KEY (`iTripLocationId`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+INSERT INTO trips_locations VALUES("","","","","");
+INSERT INTO trips_locations VALUES("","","","","");
+INSERT INTO trips_locations VALUES("","","","","");
+
+
+
+DROP TABLE user_address;
+
+CREATE TABLE `user_address` (
+  `iUserAddressId` int(11) NOT NULL AUTO_INCREMENT,
+  `iUserId` int(11) NOT NULL COMMENT 'Linked with register_user- iUserId OR register_driver - iDriverId',
+  `eUserType` enum('Driver','Rider') NOT NULL,
+  `vServiceAddress` text CHARACTER SET utf8 NOT NULL,
+  `vBuildingNo` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `vLandmark` text CHARACTER SET utf8 NOT NULL,
+  `vAddressType` text CHARACTER SET utf8 NOT NULL,
+  `vLatitude` text CHARACTER SET utf8 NOT NULL,
+  `vLongitude` text CHARACTER SET utf8 NOT NULL,
+  `dAddedDate` datetime NOT NULL,
+  `vTimeZone` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `eStatus` enum('Active','Inactive','Deleted') NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`iUserAddressId`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+INSERT INTO user_address VALUES("","","","","","","","","","","","");
+
+
+
+DROP TABLE user_emergency_contact;
+
+CREATE TABLE `user_emergency_contact` (
+  `iEmergencyId` int(11) NOT NULL AUTO_INCREMENT,
+  `iUserId` int(11) NOT NULL COMMENT 'Linked with register_user- iUserId OR register_driver - iDriverId',
+  `vName` varchar(100) NOT NULL,
+  `vPhone` varchar(100) NOT NULL,
+  `eUserType` enum('Passenger','Driver') NOT NULL DEFAULT 'Passenger',
+  PRIMARY KEY (`iEmergencyId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE user_fave_address;
+
+CREATE TABLE `user_fave_address` (
+  `iUserFavAddressId` int(11) NOT NULL AUTO_INCREMENT,
+  `iUserId` int(11) NOT NULL COMMENT 'Linked with register_user- iUserId OR register_driver - iDriverId',
+  `eUserType` enum('Driver','Passenger') NOT NULL,
+  `vAddress` text CHARACTER SET utf8 NOT NULL,
+  `vLatitude` text CHARACTER SET utf8 NOT NULL,
+  `vLongitude` text CHARACTER SET utf8 NOT NULL,
+  `dAddedDate` datetime NOT NULL,
+  `vTimeZone` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `eType` enum('Home','Work') NOT NULL DEFAULT 'Home',
+  `eStatus` enum('Active','Inactive','Deleted') NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`iUserFavAddressId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE user_pets;
+
+CREATE TABLE `user_pets` (
+  `iUserPetId` int(11) NOT NULL AUTO_INCREMENT COMMENT 'unique id',
+  `iUserId` int(11) NOT NULL COMMENT 'link with registration_driver_details',
+  `iPetTypeId` int(11) NOT NULL,
+  `vTitle` varchar(255) CHARACTER SET utf8 NOT NULL COMMENT 'licence number details',
+  `vWeight` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `tBreed` text CHARACTER SET utf8 NOT NULL,
+  `tDescription` text CHARACTER SET utf8 NOT NULL,
+  PRIMARY KEY (`iUserPetId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE user_wallet;
+
+CREATE TABLE `user_wallet` (
+  `iUserWalletId` int(11) NOT NULL AUTO_INCREMENT,
+  `iUserId` int(11) NOT NULL,
+  `eUserType` enum('Driver','Rider') NOT NULL,
+  `iBalance` float(10,2) NOT NULL,
+  `eType` enum('Credit','Debit') NOT NULL DEFAULT 'Credit',
+  `iTripId` varchar(100) NOT NULL,
+  `eFor` enum('Deposit','Booking','Refund','Withdrawl','Charges','Referrer') CHARACTER SET utf8 NOT NULL DEFAULT 'Deposit',
+  `tDescription` text CHARACTER SET utf8 NOT NULL,
+  `ePaymentStatus` enum('Settelled','Unsettelled') NOT NULL DEFAULT 'Unsettelled',
+  `dDate` datetime NOT NULL,
+  `fRatio_USD` double(10,4) NOT NULL DEFAULT '1.0000',
+  `fRatio_PHP` double(10,4) NOT NULL DEFAULT '1.0000',
+  PRIMARY KEY (`iUserWalletId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
+DROP TABLE vehicle_category;
+
+CREATE TABLE `vehicle_category` (
+  `iVehicleCategoryId` int(11) NOT NULL AUTO_INCREMENT,
+  `vCategory_EN` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `vCategoryTitle_EN` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `tCategoryDesc_EN` text CHARACTER SET utf8 NOT NULL,
+  `vCategory_TL` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `vCategoryTitle_TL` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `tCategoryDesc_TL` text CHARACTER SET utf8 NOT NULL,
+  `iParentId` int(7) NOT NULL DEFAULT '0',
+  `vLogo` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `vLogo1` varchar(500) CHARACTER SET utf8 NOT NULL,
+  `ePriceType` enum('Service','Provider') CHARACTER SET utf8 NOT NULL DEFAULT 'Service',
+  `eBeforeUpload` enum('Yes','No') CHARACTER SET utf8 NOT NULL DEFAULT 'No',
+  `eAfterUpload` enum('Yes','No') CHARACTER SET utf8 NOT NULL DEFAULT 'No',
+  `iDisplayOrder` int(11) NOT NULL DEFAULT '1',
+  `eStatus` enum('Active','Inactive') CHARACTER SET utf8 NOT NULL DEFAULT 'Active',
+  `eShowType` enum('Icon','Banner') CHARACTER SET utf8 NOT NULL DEFAULT 'Icon',
+  `vBannerImage` varchar(255) CHARACTER SET utf8 NOT NULL,
+  PRIMARY KEY (`iVehicleCategoryId`)
+) ENGINE=InnoDB AUTO_INCREMENT=171 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPRESSED;
+
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_category VALUES("","","","","","","","","","","","","","","","","");
+
+
+
+DROP TABLE vehicle_type;
+
+CREATE TABLE `vehicle_type` (
+  `iVehicleTypeId` int(11) NOT NULL AUTO_INCREMENT,
+  `iVehicleCategoryId` int(11) NOT NULL DEFAULT '0',
+  `iLocationid` int(11) NOT NULL DEFAULT '-1',
+  `iCountryId` int(11) NOT NULL DEFAULT '-1',
+  `iStateId` int(11) NOT NULL DEFAULT '-1',
+  `iCityId` int(11) NOT NULL DEFAULT '-1',
+  `vAddress` varchar(255) NOT NULL,
+  `vVehicleType` varchar(100) NOT NULL COMMENT 'name of car type - carx, cargo',
+  `vVehicleType_EN` varchar(50) NOT NULL,
+  `vVehicleType_TL` varchar(50) NOT NULL,
+  `eFareType` enum('Regular','Fixed','Hourly') NOT NULL DEFAULT 'Fixed',
+  `fFixedFare` float NOT NULL,
+  `fPricePerKM` float NOT NULL COMMENT 'price per KM',
+  `fPricePerMin` float NOT NULL COMMENT 'price per Minute',
+  `fPricePerHour` float NOT NULL,
+  `iBaseFare` float NOT NULL,
+  `fCommision` float NOT NULL,
+  `iMinFare` float NOT NULL,
+  `fPickUpPrice` float NOT NULL DEFAULT '1',
+  `fNightPrice` float NOT NULL DEFAULT '1',
+  `ePickStatus` enum('Active','Inactive') NOT NULL DEFAULT 'Inactive',
+  `eNightStatus` enum('Active','Inactive') NOT NULL DEFAULT 'Inactive',
+  `tPickStartTime` time NOT NULL,
+  `tPickEndTime` time NOT NULL,
+  `tNightStartTime` time NOT NULL,
+  `tNightEndTime` time NOT NULL,
+  `iPersonSize` int(11) NOT NULL DEFAULT '4',
+  `vLogo` varchar(100) NOT NULL,
+  `vLogo1` varchar(100) NOT NULL,
+  `eType` enum('Ride','Deliver','UberX') NOT NULL DEFAULT 'UberX',
+  `eIconType` enum('Car','Bike','Cycle','Truck') NOT NULL DEFAULT 'Car',
+  `tMonPickStartTime` time NOT NULL,
+  `tMonPickEndTime` time NOT NULL,
+  `fMonPickUpPrice` float NOT NULL DEFAULT '1',
+  `tTuePickStartTime` time NOT NULL,
+  `tTuePickEndTime` time NOT NULL,
+  `fTuePickUpPrice` float NOT NULL DEFAULT '1',
+  `tWedPickStartTime` time NOT NULL,
+  `tWedPickEndTime` time NOT NULL,
+  `fWedPickUpPrice` float NOT NULL DEFAULT '1',
+  `tThuPickStartTime` time NOT NULL,
+  `tThuPickEndTime` time NOT NULL,
+  `fThuPickUpPrice` float NOT NULL DEFAULT '1',
+  `tFriPickStartTime` time NOT NULL,
+  `tFriPickEndTime` time NOT NULL,
+  `fFriPickUpPrice` float NOT NULL DEFAULT '1',
+  `tSatPickStartTime` time NOT NULL,
+  `tSatPickEndTime` time NOT NULL,
+  `fSatPickUpPrice` float NOT NULL DEFAULT '1',
+  `tSunPickStartTime` time NOT NULL,
+  `tSunPickEndTime` time NOT NULL,
+  `fSunPickUpPrice` float NOT NULL DEFAULT '1',
+  `eAllowQty` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `iMaxQty` int(11) NOT NULL DEFAULT '1',
+  `fVisitFee` float NOT NULL,
+  `fCancellationFare` float NOT NULL DEFAULT '0',
+  `iCancellationTimeLimit` int(11) NOT NULL,
+  `eStatus` enum('Active','Inactive','Deleted') NOT NULL DEFAULT 'Active',
+  `fWaitingFees` float NOT NULL DEFAULT '0',
+  `iWaitingFeeTimeLimit` int(11) NOT NULL,
+  `iDisplayOrder` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`iVehicleTypeId`)
+) ENGINE=InnoDB AUTO_INCREMENT=361 DEFAULT CHARSET=utf8 COMMENT='how many vehicles we have';
+
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+INSERT INTO vehicle_type VALUES("","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","");
+
+
+
+DROP TABLE visit_address;
+
+CREATE TABLE `visit_address` (
+  `iVisitId` int(11) NOT NULL AUTO_INCREMENT,
+  `vSourceLatitude` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vSourceLongitude` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vDestLatitude` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vDestLongitude` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `vSourceAddresss` text CHARACTER SET utf8 NOT NULL,
+  `tDestAddress` text CHARACTER SET utf8 NOT NULL,
+  `eStatus` enum('Active','Inactive','Deleted') CHARACTER SET utf8 NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`iVisitId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
